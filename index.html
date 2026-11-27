@@ -91,7 +91,7 @@
 .projector .panel .room-card p{margin:4px auto}}
 @media print{body{background:white}.screen{background:white;color:#222;min-height:auto;padding:0}.screen:before,.screen:after,.topbar,.actions,.footer,.report-tabs,.toast,.no-print{display:none!important}.panel{color:#222;box-shadow:none;border:0;width:100%;max-width:none;padding:8px}.panel h2{color:#222}.metric,.mini-card{border:1px solid #aaa}table{min-width:0}th,td{font-size:10px;padding:5px}}
 
-/* ศึกคนดวงดี v7 — ใช้ชุดสีเดิมและภาพการ์ดจริง */
+/* ศึกคนดวงดี v8 — เล่นต่อเนื่อง ควบคุมง่าย */
 .role-card{padding:3px;overflow:hidden;border-radius:8px;min-height:0;aspect-ratio:3/4;background:#fff!important}
 .role-card img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 5px #4e40703d)}
 .role-card .fallback{display:none;font-size:clamp(33px,5vw,60px)}
@@ -163,14 +163,11 @@
 /* Mission Control: เห็นด่านและขั้นตอนตลอด โดยไม่กินพื้นที่คำถาม */
 .mission-nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:5px 0 3px}
 .stage-chip{min-width:0;border:1px solid #fff8;border-radius:12px;padding:5px 8px;background:#ffffff28;color:white;
-  text-align:left;display:flex;align-items:center;gap:6px;justify-content:center;font:inherit;cursor:pointer;box-shadow:inset 0 0 0 1px #ffffff10}
+  text-align:left;display:flex;align-items:center;gap:6px;justify-content:center;font:inherit;cursor:default;box-shadow:inset 0 0 0 1px #ffffff10}
 .stage-chip span{font-size:12px;white-space:nowrap}.stage-chip strong{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .stage-chip.passed{background:#62a6a277}.stage-chip.current{background:linear-gradient(120deg,#fff4be,#f2c981);color:#5a4781;border-color:white;box-shadow:0 2px #ae8e80}
-.stage-chip:disabled{opacity:.55;cursor:default}.stage-chip:not(:disabled):hover{filter:brightness(1.08)}
 .scene-guide{background:#3d367c70;border:1px solid #ffffff5c;border-radius:11px;padding:4px 12px;display:flex;
   align-items:center;justify-content:space-between;gap:8px;font-size:12px;min-height:29px}
-.guide-controls{display:flex;gap:7px;align-items:center}.guide-btn{background:#ffffff24;border:1px solid #fff9;border-radius:8px;color:white;
-  padding:2px 9px;font:inherit;font-weight:800;cursor:pointer}.guide-btn:disabled{opacity:.4;cursor:default}.guide-btn.live{background:#f6dd9b;color:#59457b}
 .scene-next{color:#fff3b3;font-weight:800}
 .worksheet-cue{display:inline-block;margin:3px auto 0;border:1px solid #cfbcea;border-radius:25px;padding:3px 12px;
   color:#725b97;background:#fff2d7;font-size:13px;font-weight:800}
@@ -232,7 +229,7 @@
 <div id="loading" class="loading-mask hidden" role="status" aria-live="polite"><div><div class="loading-wheel"></div><span id="loading-label">กำลังเชื่อมต่อ...</span><p style="font-size:13px;opacity:.75">โปรดรอสักครู่</p></div></div>
 <audio id="bgm" loop preload="none"></audio>
 <script>
-/* ศึกคนดวงดี v7 | frontend สำหรับ GS v7 (และ GS v6 ยกเว้นสถานะส่งรายกลุ่ม) */
+/* ศึกคนดวงดี v8 | เมนูเรียบง่าย | ใช้ GS v7 */
 const API='https://script.google.com/macros/s/AKfycbwJHNmQVsdUSQzy3gH8Y6vGGaswy5EymEx09gS9ewl0gu6j8TZbo4X2nKiDTqzU6mMT/exec';
 const SHEET_URL='https://docs.google.com/spreadsheets/d/1iLKSq7UXITmYcSxI2Ap_BQ0AyNeyRi17os51j3maswI/edit';
 const BGM_FILE='audio/background.mp3';
@@ -258,12 +255,12 @@ const REASONS={
   K3:'การทดลองสุ่มซ้ำอาจได้ผลเหมือนเดิม หรือแตกต่างจากครั้งก่อนก็ได้'
 };
 const S={mode:'landing',pin:'',room:null,student:null,pass:sessionStorage.getItem('luck_admin')||'',
-  report:null,rooms:[],roster:null,editRoll:null,tab:'overview',viewKey:'',busy:false,
+  report:null,tab:'overview',viewKey:'',busy:false,
   sound:localStorage.getItem('luck_sound')!=='off',summaryOpen:false,
   bgmVolume:Number(localStorage.getItem('luck_bgm_volume')??100),
   sfxVolume:Number(localStorage.getItem('luck_sfx_volume')??100),soundPanel:false,
   timerPaused:false,timerPauseAt:0,clockKey:'',champion:null,skipEffect:false,
-  history:{},preview:null,fx:null,fxStopTimer:null,duckTimer:null};
+  fx:null,fxStopTimer:null};
 const $=id=>document.getElementById(id),delay=ms=>new Promise(ok=>setTimeout(ok,ms));
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const uid=()=>crypto.randomUUID(),img=role=>'images/'+(IMG[role]||'cardmaster.png');
@@ -380,18 +377,13 @@ function header(){const teacher=S.mode.startsWith('teacher'),pin=S.room?.pin||S.
 const PHASE_TITLES={ROLES:'เปิดตัวละคร',INTRO:'เปิดกติกาด่าน',QUESTION:'นักเรียนตอบคำถาม',
   RESULTS:'ดูผลตอบและอภิปราย',REVEAL:'เฉลยคำตอบ',DRAW:'ประกาศผลการสุ่ม',SUMMARY:'สรุปความรู้',EXIT:'Exit Ticket'};
 function stageProgress(){if(S.mode!=='teacherRoom'||!S.room||S.room.phase==='LOBBY')return '';
-  const r=S.preview||S.room,active=r.stage,latest=S.room.stage,preview=!!S.preview;
-  const chips=Array.from({length:4},(_,i)=>{const stage=i+1,items=Object.values(S.history).filter(x=>x.stage===stage);
-    const canGo=stage===latest||(items.length>0&&stage<latest),n=items.find(x=>x.phase==='DRAW')||items.find(x=>x.phase==='INTRO')||items[0];
-    const scene=stage===latest?'live':n?.scene;
-    return `<button class="stage-chip ${stage===active?'current':''} ${stage<latest?'passed':''}" data-act="preview-stage"
-      data-scene="${scene??''}" ${canGo?'':'disabled'} title="${canGo?'ดูด่านโดยไม่เปลี่ยนผลสุ่ม':'ยังไม่ถึงด่านนี้'}">
-      <span>${stage<latest?'✅':stage===active?'🎮':'🔒'} ด่าน ${stage}</span><strong>${esc(STAGE[stage].name)}</strong></button>`;}).join('');
+  const r=S.room,chips=Array.from({length:4},(_,i)=>{const stage=i+1;
+    return `<span class="stage-chip ${stage===r.stage?'current':''} ${stage<r.stage?'passed':''}">
+      <span>${stage<r.stage?'✅':stage===r.stage?'🎮':'🔒'} ด่าน ${stage}</span><strong>${esc(STAGE[stage].name)}</strong></span>`;}).join('');
   return `<nav class="mission-nav" aria-label="ความคืบหน้าเกม">${chips}</nav>
-    <div class="scene-guide"><span>📍 ${preview?'กำลังย้อนดู (ไม่เปลี่ยนผลเกม)':'ขณะนี้'}: <b>${esc(PHASE_TITLES[r.phase]||r.phase)}</b>
+    <div class="scene-guide"><span>📍 ขณะนี้: <b>${esc(PHASE_TITLES[r.phase]||r.phase)}</b>
       ${r.questionId?`· ${r.questionId==='K3'?'ชวนคิดหลังเกม':r.questionId}`:''}</span>
-      <div class="guide-controls"><button class="guide-btn" data-act="preview-back" ${!Object.keys(S.history).some(k=>Number(k)<(preview?r.scene:S.room.scene))?'disabled':''}>⬅ ย้อนดู</button>
-      ${preview?'<button class="guide-btn live" data-act="return-live">↪ กลับสู่เกมปัจจุบัน</button>':`<span class="scene-next">ถัดไป: ${esc(nextLabel(S.room))}</span>`}</div></div>`;}
+      <span class="scene-next">ถัดไป: ${esc(nextLabel(r))}</span></div>`;}
 function soundSettings(){return S.soundPanel&&S.mode.startsWith('teacher')?`<div class="sound-popover" role="dialog" aria-label="ตั้งค่าระดับเสียง">
   <strong>🎚️ ปรับเสียงห้องเรียน</strong><label>🎵 BGM <b id="bgm-percentage">${S.bgmVolume}%</b>
   <input type="range" min="0" max="100" value="${S.bgmVolume}" data-volume="bgm" aria-label="ระดับเพลงพื้นหลัง"></label>
@@ -402,12 +394,11 @@ function soundSettings(){return S.soundPanel&&S.mode.startsWith('teacher')?`<div
 function frame(v){return `<main class="screen ${S.mode==='teacherRoom'?'projector':''}">${header()}${stageProgress()}${v}${soundSettings()}
   <footer class="footer">✦ THINK • PLAY • RANDOM • WIN ✦</footer></main>`;}
 function render(){const map={landing:landingView,teacherLogin:loginView,teacherHome:teacherHomeView,
-  publicLobby:publicLobbyView,teacherRoom:teacherRoomView,teacherRoster:rosterView,teacherReport:reportView,
+  teacherRoom:teacherRoomView,teacherReport:reportView,
   studentEntry:studentEntryView,studentRegister:studentRegisterView,studentRoom:studentRoomView};
   $('app').innerHTML=frame((map[S.mode]||landingView)());
   if(S.mode==='teacherRoom'&&S.room?.phase==='QUESTION')updateClock();updateLive();}
-function updateLive(){if(S.preview)return;
-  document.querySelectorAll('[data-live=registered]').forEach(el=>el.textContent=S.room?.registered??0);
+function updateLive(){document.querySelectorAll('[data-live=registered]').forEach(el=>el.textContent=S.room?.registered??0);
   document.querySelectorAll('[data-live=submitted]').forEach(el=>el.textContent=S.room?.submitted??0);
   document.querySelectorAll('[data-group-count]').forEach(el=>{
     const i=Number(el.dataset.groupCount)-1;el.textContent=(S.room?.groupCounts?.[i]??0)+' / '+(S.room?.roles??0);});
@@ -428,28 +419,14 @@ function loginView(){return landingView()+`<div class="login-modal"><section cla
     autocomplete="current-password" placeholder="รหัสผ่าน Admin"><div class="actions">
     <button class="btn primary big block" type="submit">เข้าสู่โหมดครู</button></div></form>
     <div class="center"><button class="btn" data-act="landing">ยกเลิก</button></div></section></div>`;}
-function teacherHomeView(){const list=S.rooms.filter(x=>x.roomTab&&x.status!=='TRASHED').slice().reverse();
-  return hero(true)+`<section class="panel" style="max-width:1020px"><h2>✦ สร้างห้องเกมใหม่</h2>
+function teacherHomeView(){return hero(true)+`<section class="panel" style="max-width:1020px"><h2>✦ สร้างห้องเกมใหม่</h2>
   <form id="create-form" class="form-row three"><div><label class="field">🏫 ห้องเรียน</label>
-    <input class="input" name="className" value="ม.3/1" maxlength="40" required></div>
+    <input class="input" name="className" placeholder="พิมพ์ชื่อห้อง เช่น ม.3/1" maxlength="40" required></div>
     <div><label class="field">👥 จำนวนผู้เล่น</label><select class="input" name="students">
       <option value="30">30 คน · 5 กลุ่ม · 6 การ์ด</option>
       <option value="40">40 คน · 8 กลุ่ม · 5 การ์ด</option></select></div>
     <div style="align-self:end"><button class="btn primary big block" type="submit">🚀 สร้างห้อง</button></div></form>
-    <p class="muted center">สร้าง PIN และ QR Code อัตโนมัติ · เพิ่มแท็บใหม่ใน Google Sheets หลัก</p></section>
-  <section class="panel"><div class="actions" style="justify-content:space-between;margin:0 0 10px">
-    <h2 style="margin:0">📂 ห้องที่เคยสร้าง</h2><button class="btn" data-act="reload-rooms">↻ โหลดล่าสุด</button></div>
-    <div class="room-list">${list.length?list.map(x=>`<div class="room-item"><div><strong>${esc(x.className)} · PIN ${esc(x.pin)}</strong>
-      <div class="muted">${x.students} คน · ${x.groups} กลุ่ม</div></div>
-      <button class="btn mint" data-act="open-room" data-pin="${esc(x.pin)}">เปิดห้อง</button></div>`).join(''):
-      '<p class="center muted">ยังไม่มีห้องในระบบใหม่</p>'}</div></section>`;}
-function publicLobbyView(){const r=S.room;if(!r)return landingView();return hero(true)+`<section class="panel wide">
-  <div class="room-card"><div><div class="question-label">🎮 เข้าห้องด้วย PIN</div><div class="pin-big">${esc(r.pin)}</div>
-    <h2>${esc(r.className)} · ${r.students} คน · ${r.groups} กลุ่ม</h2>
-    <p class="large" style="font-size:25px">เข้าห้องแล้ว <b data-live="registered">${r.registered}</b> / ${r.students} คน</p>
-    <div class="actions"><button class="btn primary" data-act="teacher-login">🎬 เมนูครู</button>
-      <button class="btn mint" data-act="student-entry">📱 เข้าด้วย PIN</button></div></div>
-    <div><img class="qr" src="${qrImage(r.pin)}" alt="QR Code เข้าร่วมเกม"><p class="center">สแกนเพื่อเข้าห้องเกม</p></div></div></section>`;}
+    <p class="muted center">สร้าง PIN และ QR Code อัตโนมัติ ไม่ต้องยืนยันรายชื่อนักเรียนก่อนเริ่ม</p></section>`;}
 function studentEntryView(){return hero(true)+`<section class="panel narrow center"><h2>📱 เข้าห้องเกม</h2>
   <form id="join-form"><label class="field">PIN 4 หลัก</label><input class="input center" name="pin" inputmode="numeric"
     pattern="[0-9]{4}" maxlength="4" required value="${esc(S.pin)}" placeholder="0000"
@@ -457,17 +434,14 @@ function studentEntryView(){return hero(true)+`<section class="panel narrow cent
     <button class="btn mint big block">ตรวจสอบห้อง →</button></div></form>
     <p class="muted">เน็ตหลุดกลับเข้าห้องด้วย PIN เดิมได้เสมอ</p></section>`;}
 function studentRegisterView(){const r=S.room;if(!r)return studentEntryView();return hero(true)+`<section class="panel narrow">
-  <h2>🃏 ลงทะเบียนตามการ์ดบนใบภารกิจ</h2><form id="register-form"><div class="form-row">
+  <h2>🃏 ลงทะเบียนเข้าห้อง ${esc(r.className)}</h2><form id="register-form"><div class="form-row">
     <div><label class="field">ชื่อ–สกุล</label><input class="input" name="studentName" required maxlength="100"></div>
     <div><label class="field">เลขที่</label><input class="input" name="rollNo" inputmode="numeric" type="number" min="1" max="200" required></div></div>
     <div class="form-row" style="margin-top:12px"><div><label class="field">กลุ่ม</label><select class="input" name="groupNo">
       <option value="">เลือกกลุ่ม</option>${Array.from({length:r.groups},(_,i)=>`<option value="${i+1}">กลุ่ม ${i+1}</option>`).join('')}</select></div>
     <div><label class="field">การ์ดของฉัน</label><select class="input" name="role"><option value="">เลือกการ์ด</option>
       ${names(r).map(x=>`<option value="${x}">${FACE[x]} ${x}</option>`).join('')}</select></div></div>
-    <div class="actions"><button class="btn primary big block" type="submit" name="joinMode" value="new">เข้าร่วมเกม</button></div>
-    <div class="waiting"><strong>เคยลงทะเบียนแล้ว?</strong> กรอกชื่อกับเลขที่เดิม แล้วกด
-      <button class="btn mint" type="submit" name="joinMode" value="return">กลับเข้าห้องเดิม</button></div>
-    </form></section>`;}
+    <div class="actions"><button class="btn primary big block" type="submit">🎮 เข้าร่วมเกม</button></div></form></section>`;}
 function groupProgress(r){return `<div class="group-pills">${Array.from({length:r.groups},(_,i)=>
   `<span>กลุ่ม ${i+1}: <b data-group-count="${i+1}">${r.groupCounts?.[i]??0} / ${r.roles}</b></span>`).join('')}</div>`;}
 function answerProgress(r){return `<div class="response-progress" aria-label="สถานะการส่งคำตอบแยกกลุ่ม">
@@ -476,27 +450,6 @@ function answerProgress(r){return `<div class="response-progress" aria-label="�
       <strong data-group-submitted="${i+1}">${n===undefined?'–':n} / ${den}</strong>
       <div class="response-track"><i style="width:${den&&n!==undefined?100*n/den:0}%"></i></div></div>`;}).join('')}
   </div>${!Array.isArray(r.groupSubmitted)?'<p class="muted center small">การนับรายกลุ่มจะทำงานเมื่ออัปเดต GS เป็นเวอร์ชัน 7</p>':''}`;}
-function rosterView(){const r=S.room,a=S.roster;if(!r)return '';
-  if(!a)return `<section class="panel"><h2>กำลังตรวจรายชื่อ...</h2></section>`;
-  const x=a.students.find(p=>p.rollNo===S.editRoll);
-  return `<section class="mission"><div class="mission-tag">ROOM CHECK</div><h1>📋 รายชื่อและการ์ด</h1></section>
-    <section class="panel wide"><div class="actions"><strong>เข้าห้องแล้ว ${a.registered}/${a.expected} คน</strong>
-      <button class="btn mint" data-act="refresh-roster">↻ โหลดใหม่</button></div>${groupProgress(r)}
-      <p class="muted">ตรวจรายชื่อและแก้ไขได้ก่อนเริ่มเกม · ไม่บังคับให้ยืนยันรายชื่อซ้ำ</p>
-      <div class="table-wrap roster-table"><table><thead><tr><th>เลขที่</th><th>ชื่อ–สกุล</th><th>กลุ่ม</th><th>การ์ด</th><th>แก้ไข</th></tr></thead><tbody>
-        ${a.students.map(p=>`<tr><td>${p.rollNo}</td><td>${esc(p.studentName)}</td><td>${p.groupNo}</td><td>${esc(p.role)}</td>
-          <td><button class="btn" data-act="edit-student" data-roll="${p.rollNo}">✏️</button></td></tr>`).join('')}</tbody></table></div>
-      ${x?`<form id="edit-form" class="roster-edit"><h3>✏️ แก้ไขเลขที่ ${x.rollNo}</h3>
-        <input type="hidden" name="rollNo" value="${x.rollNo}"><div class="form-row">
-          <div><label class="field">ชื่อ–สกุล</label><input class="input" name="newStudentName" value="${esc(x.studentName)}" required></div>
-          <div><label class="field">เลขที่</label><input class="input" name="newRollNo" type="number" value="${x.rollNo}" min="1" max="200" required></div></div>
-        <div class="form-row" style="margin-top:9px"><div><label class="field">กลุ่ม</label><select class="input" name="newGroupNo">
-          ${Array.from({length:r.groups},(_,i)=>`<option value="${i+1}" ${x.groupNo===i+1?'selected':''}>กลุ่ม ${i+1}</option>`).join('')}</select></div>
-          <div><label class="field">การ์ด</label><select class="input" name="newRole">${names(r).map(v=>
-            `<option value="${v}" ${v===x.role?'selected':''}>${v}</option>`).join('')}</select></div></div>
-          <div class="actions"><button class="btn primary">💾 บันทึก</button>
-            <button class="btn" type="button" data-act="cancel-edit">ยกเลิก</button></div></form>`:''}
-      <div class="actions"><button class="btn primary" data-act="back-to-game">← กลับเกม</button></div></section>`;}
 function nextLabel(r){if(r.phase==='LOBBY')return '🃏 เปิดตัวละคร!';
   if(r.phase==='ROLES')return '🔥 เปิดด่านที่ 1';if(r.phase==='INTRO')return '⏱ 3...2...1 เปิดโจทย์!';
   if(r.phase==='QUESTION')return '📊 ปิดรับคำตอบ · ดูผลตอบ';
@@ -506,9 +459,8 @@ function nextLabel(r){if(r.phase==='LOBBY')return '🃏 เปิดตัวล
   if(r.phase==='DRAW')return r.stage===1?'🧠 ตอบคำถามหลังสุ่ม':
     r.stage===4?'🧠 ชวนคิดหลังเกม':`🚀 ไปด่านที่ ${r.stage+1}`;
   if(r.phase==='SUMMARY')return '📝 ไป Exit Ticket';return '';}
-function actionButton(r){return S.preview?'<div class="actions"><button class="btn mint big" data-act="return-live">↪ กลับไปเล่นต่อ</button></div>':
-  r.phase==='EXIT'?'':`<div class="actions"><button class="btn primary big" data-act="next-scene">${nextLabel(r)}</button></div>`;}
-function teacherRoomView(){const r=S.preview||S.room;if(!r)return '';
+function actionButton(r){return r.phase==='EXIT'?'':`<div class="actions"><button class="btn primary big" data-act="next-scene">${nextLabel(r)}</button></div>`;}
+function teacherRoomView(){const r=S.room;if(!r)return '';
   if(r.phase==='LOBBY')return `<section class="mission"><div class="mission-tag">GAME ROOM READY</div>
     <h1>🎮 ห้องเกมพร้อมแล้ว!</h1><p class="lead">ให้ทุกคนสแกน QR Code หรือใส่ PIN</p></section>
     <section class="panel wide"><div class="room-card"><div><div class="question-label">🔑 PIN เข้าห้อง</div>
@@ -516,7 +468,7 @@ function teacherRoomView(){const r=S.preview||S.room;if(!r)return '';
       <p class="large" style="font-size:25px">ลงทะเบียน <strong data-live="registered">${r.registered}</strong> / ${r.students} คน</p>
       <button class="btn mint" data-act="copy-link">📋 คัดลอกลิงก์</button></div>
       <div><img class="qr" src="${qrImage(r.pin)}" alt="QR Code เข้าห้องเกม"><p class="center">📱 สแกนเพื่อเล่น</p></div></div>
-      ${groupProgress(r)}<div class="actions"><button class="btn mint" data-act="check-roster">📋 ตรวจ/แก้รายชื่อ</button>
+      ${groupProgress(r)}<div class="actions">
       <button class="btn primary big" data-act="next-scene" ${r.registered?'':'disabled'}>🃏 เปิดตัวละคร!</button></div></section>`;
   if(r.phase==='ROLES')return `<section class="mission"><div class="mission-tag">CHARACTER REVEAL ✨</div>
     <h1>🃏 ใครได้เป็นอะไร?</h1><p class="lead">มาดูตัวละครประจำตัวกัน!</p>
@@ -642,8 +594,7 @@ function studentRoomView(){const r=S.room,p=S.student;if(!r||!p)return '';
     onerror="this.parentNode.classList.add('broken')"><span class="fallback">${FACE[p.role]}</span>
     <div><strong>${esc(p.studentName)} · ${esc(p.role)}</strong><small>กลุ่ม ${p.groupNo} · เลขที่ ${p.rollNo}</small>
       <span class="status ${status.out?'out':''}">${status.out?'💔 ตกรอบด่าน '+status.stage:'💚 ยังอยู่ในเกม'}</span></div></div>
-    ${content}<p class="lightmuted center small">คำตอบส่งผ่านมือถือ • วิธีคิดเขียนในใบภารกิจ</p>
-    <div class="actions"><button class="btn ghost" data-act="student-entry">🔄 กลับหน้าเข้าห้อง</button></div></section>`;}
+    ${content}<p class="lightmuted center small">คำตอบส่งผ่านมือถือ • วิธีคิดเขียนในใบภารกิจ</p></section>`;}
 function badgePass(v){return v===null?'⏳':v?'✅':'❌';}
 function reportOverview(rep){const x=rep.summary;return `<div class="metrics">
     <div class="metric">ลงทะเบียน<strong>${x.registered}/${x.expected}</strong>คน</div>
@@ -717,16 +668,12 @@ function downloadReport(type){const r=S.report;if(!r)return;
       `${p.rollNo} | ${p.studentName} | ${p.groupNo} | ${p.K.score}/3 (${pass(p.K.passed)}) | ${p.P.score??'–'}/3 (${pass(p.P.passed)}) | ${p.A.score??'–'}/3 (${pass(p.A.passed)})`)];
     downloadFile('ศึกคนดวงดี_'+r.room.pin+'.txt',lines.join('\n'),'text/plain;charset=utf-8');}
   toast('ดาวน์โหลดรายงานเรียบร้อย');}
-function rememberScene(r){if(S.mode!=='teacherRoom')return;S.history[r.scene]=r;
-  try{sessionStorage.setItem('luck_scenes_v7_'+r.roomId,JSON.stringify(S.history));}catch(_){}}
 async function refreshRoom(force=false){if(!S.pin)return;const r=await getRoom(S.pin),old=S.room;
-  S.room=r;rememberScene(r);const key=S.mode+'|'+r.pin+'|'+r.scene+(r.phase==='LOBBY'?'|'+r.registered:'');
+  S.room=r;const key=S.mode+'|'+r.pin+'|'+r.scene+(r.phase==='LOBBY'?'|'+r.registered:'');
   if(force||key!==S.viewKey){S.viewKey=key;render();}else updateLive();
   if(old?.scene!==r.scene&&r.phase==='REVEAL'&&S.mode==='teacherRoom')playFx('reveal',3.2);}
 async function enterTeacherRoom(pin){S.pin=String(pin);S.mode='teacherRoom';S.champion=null;
-  sessionStorage.setItem('luck_teacher_pin',S.pin);localStorage.setItem('luck_last_room',S.pin);
-  const current=await getRoom(S.pin);S.preview=null;try{S.history=JSON.parse(sessionStorage.getItem('luck_scenes_v7_'+current.roomId)||'{}');}catch(_){S.history={};}
-  S.room=current;rememberScene(current);S.viewKey='';render();bgm(true);
+  S.room=await getRoom(S.pin);S.viewKey='';render();bgm(true);
   if(S.room.phase==='DRAW'&&S.room.stage===4){try{S.champion=(await post('report',{pin:S.pin},true)).champion;render();}catch(_){}}}
 async function enterStudentRoom(p,rejoin=false){if(rejoin){const data=await post('register',{pin:p.pin,
   rollNo:p.rollNo,studentName:p.studentName});p={...data.student,pin:p.pin};}
@@ -739,7 +686,6 @@ async function enterStudentByPin(pin,room){S.pin=pin;S.room=room;
   let saved;try{saved=JSON.parse(localStorage.getItem('luck_v6_student')||'null');}catch(_){saved=null;}
   if(saved?.pin===pin&&saved.roomId===room.roomId){try{await enterStudentRoom(saved,true);return;}catch(_){}}
   S.mode='studentRegister';render();}
-async function loadRooms(){S.rooms=await post('rooms',{},true);if(S.mode==='teacherHome')render();}
 async function openReports(){S.mode='teacherReport';S.report=null;S.tab='overview';render();
   S.report=await post('report',{pin:S.pin},true);render();}
 function timerKey(){return 'luck_timer_v6_'+S.pin+'_'+S.room?.scene;}
@@ -774,18 +720,11 @@ async function handleAction(e){const el=e.target.closest('[data-act]');if(!el)re
     if(S.sound){bgm(true);sfx('step');}else{stopFx();bgm(false);}render();return;}
   if(a==='sound-settings'){S.soundPanel=!S.soundPanel;render();return;}
   if(a==='test-sfx'){sfx('win');fireworksSound(2.6);return;}
-  if(a==='return-live'){S.preview=null;render();return;}
-  if(a==='preview-stage'){const scene=el.dataset.scene;
-    if(scene==='live'){S.preview=null;render();return;}
-    if(scene!==''&&S.history[Number(scene)]){S.preview=S.history[Number(scene)];render();}return;}
-  if(a==='preview-back'){const current=S.preview?.scene??S.room?.scene;
-    const prior=Object.keys(S.history).map(Number).filter(n=>n<current).sort((a,b)=>b-a)[0];
-    if(prior!==undefined){S.preview=S.history[prior];render();}return;}
   if(a==='landing'){S.mode='landing';render();return;}
   if(a==='teacher-login'){S.mode=S.pass?'teacherHome':'teacherLogin';render();bgm(true);audioReady();
-    if(S.pass)guarded(loadRooms,'กำลังโหลดห้องเกม...');return;}
+    return;}
   if(a==='student-entry'){S.mode='studentEntry';render();return;}
-  if(a==='teacher-home'){S.mode='teacherHome';render();guarded(loadRooms,'กำลังโหลดห้องเกม...');return;}
+  if(a==='teacher-home'){S.mode='teacherHome';render();return;}
   if(a==='report-tab'){S.tab=el.dataset.tab;render();return;}
   if(a==='download-csv'||a==='download-txt'){downloadReport(a.endsWith('csv')?'csv':'txt');return;}
   if(a==='print'){window.print();return;}
@@ -795,19 +734,11 @@ async function handleAction(e){const el=e.target.closest('[data-act]');if(!el)re
   if(a==='show-summary'){S.summaryOpen=true;render();return;}
   if(a==='copy-link'){navigator.clipboard.writeText(qrLink(S.pin)).then(()=>toast('คัดลอกลิงก์แล้ว'))
     .catch(()=>toast('คัดลอกไม่สำเร็จ',true));return;}
-  if(a==='edit-student'){S.editRoll=Number(el.dataset.roll);render();return;}
-  if(a==='cancel-edit'){S.editRoll=null;render();return;}
-  if(a==='open-room'){guarded(()=>enterTeacherRoom(el.dataset.pin),'กำลังเปิดห้อง...');return;}
-  if(a==='reload-rooms'){guarded(loadRooms,'กำลังโหลดรายชื่อห้อง...');return;}
-  if(a==='check-roster'||a==='refresh-roster'){
-    guarded(async()=>{S.roster=await post('roster',{pin:S.pin},true);S.mode='teacherRoster';S.editRoll=null;render();},
-      'กำลังตรวจรายชื่อ...');return;}
   if(a==='back-to-game'){guarded(()=>enterTeacherRoom(S.pin),'กำลังกลับเข้าเกม...');return;}
   if(a==='reports'||a==='refresh-report'){guarded(async()=>{
     if(a==='refresh-report'&&S.report){S.report=await post('report',{pin:S.pin},true);render();}
     else await openReports();},'กำลังดึงรายงานล่าสุด...');return;}
-  if(a==='next-scene'){if(S.preview){toast('ขณะย้อนดูไม่สามารถเปลี่ยนด่านได้');return;}
-    const r=S.room,missing=(r.registered||0)-(r.submitted||0);
+  if(a==='next-scene'){const r=S.room,missing=(r.registered||0)-(r.submitted||0);
     if(r.phase==='QUESTION'&&missing>0&&!window.confirm(`มีผู้ยังไม่ส่งคำตอบ ${missing} คน\nต้องการปิดรับคำตอบและไปต่อหรือไม่?`))return;
     guarded(nextTeacher,'กำลังดำเนินภารกิจ...');return;}
   if(a==='save-p'||a==='save-a'){const roll=el.dataset.roll;
@@ -817,12 +748,12 @@ async function handleAction(e){const el=e.target.closest('[data-act]');if(!el)re
       S.report=await post('report',{pin:S.pin},true);render();toast('บันทึกคะแนนแล้ว');},'กำลังบันทึกคะแนน...');return;}
 }
 async function handleForm(e){const form=e.target,id=form.id;
-  if(!['login-form','create-form','join-form','register-form','edit-form'].includes(id)&&!form.matches('.answer-form'))return;
+  if(!['login-form','create-form','join-form','register-form'].includes(id)&&!form.matches('.answer-form'))return;
   e.preventDefault();const f=new FormData(form);
   if(id==='login-form')return guarded(async()=>{S.pass=String(f.get('password')||'');
     try{await post('login',{},true);}catch(e){S.pass='';throw e;}
     sessionStorage.setItem('luck_admin',S.pass);
-    S.mode='teacherHome';render();await loadRooms();bgm(true);toast('เข้าสู่โหมดครูสำเร็จ');},'กำลังตรวจรหัสครู...');
+    S.mode='teacherHome';render();bgm(true);toast('เข้าสู่โหมดครูสำเร็จ');},'กำลังตรวจรหัสครู...');
   if(id==='create-form')return guarded(async()=>{bgm(true);
     const game=await post('create',{className:f.get('className'),students:f.get('students')},true);
     await enterTeacherRoom(game.pin);sfx('win');toast('สร้างห้อง PIN '+game.pin+' แล้ว');},'กำลังสร้าง PIN และห้องเกม...');
@@ -830,15 +761,11 @@ async function handleForm(e){const form=e.target,id=form.id;
     if(!/^[0-9]{4}$/.test(pin))throw Error('กรุณากรอก PIN 4 หลัก');
     const room=await getRoom(pin);await enterStudentByPin(pin,room);},'กำลังค้นหาห้อง...');
   if(id==='register-form')return guarded(async()=>{
-    const mode=e.submitter?.value||'new',data={pin:S.pin,studentName:f.get('studentName'),rollNo:f.get('rollNo')};
-    if(mode==='new'){data.groupNo=f.get('groupNo');data.role=f.get('role');
-      if(!data.groupNo||!data.role)throw Error('กรุณาเลือกกลุ่มและการ์ด');}
+    const data={pin:S.pin,studentName:f.get('studentName'),rollNo:f.get('rollNo'),
+      groupNo:f.get('groupNo'),role:f.get('role')};
+    if(!data.groupNo||!data.role)throw Error('กรุณาเลือกกลุ่มและการ์ด');
     const result=await post('register',data);await enterStudentRoom({...result.student,pin:S.pin});
     toast(result.rejoined?'กลับเข้าห้องเดิมแล้ว':'ลงทะเบียนสำเร็จ');},'กำลังบันทึกข้อมูลนักเรียน...');
-  if(id==='edit-form')return guarded(async()=>{await post('updateStudent',{pin:S.pin,rollNo:f.get('rollNo'),
-    newRollNo:f.get('newRollNo'),newStudentName:f.get('newStudentName'),newGroupNo:f.get('newGroupNo'),
-    newRole:f.get('newRole')},true);S.roster=await post('roster',{pin:S.pin},true);
-    S.room=await getRoom(S.pin);S.editRoll=null;render();toast('แก้ไขรายชื่อแล้ว');},'กำลังแก้ไขข้อมูล...');
   if(form.matches('.answer-form'))return guarded(async()=>{
     const q=form.dataset.q;let answer=f.get('answer');
     if(q==='P4'){const all=[0,1,2].map(i=>f.get('p4_'+i));
@@ -855,16 +782,12 @@ document.addEventListener('input',e=>{const key=e.target?.dataset?.volume;if(!['
   if(key==='bgm'){S.bgmVolume=v;localStorage.setItem('luck_bgm_volume',String(v));bgmLevel(!!S.fx);}
   else{S.sfxVolume=v;localStorage.setItem('luck_sfx_volume',String(v));if(S.fx)S.fx.volume=v/100;}
   const x=$(key+'-percentage');if(x)x.textContent=v+'%';});
-setInterval(()=>{if(!S.busy&&S.pin&&['teacherRoom','studentRoom','publicLobby','teacherRoster'].includes(S.mode))
-  refreshRoom().catch(()=>{});},5000);
+setInterval(()=>{if(!S.busy&&S.pin&&S.mode==='teacherRoom')refreshRoom().catch(()=>{});},5000);
+setInterval(()=>{if(!S.busy&&S.pin&&S.mode==='studentRoom')refreshRoom().catch(()=>{});},8000);
 setInterval(updateClock,450);
 async function init(){const pin=new URLSearchParams(location.search).get('pin');
   if(pin){S.pin=pin;S.mode='studentEntry';render();await guarded(async()=>{
     const room=await getRoom(pin);await enterStudentByPin(pin,room);},'กำลังเข้าห้องเกม...');return;}
-  const teacherPin=sessionStorage.getItem('luck_teacher_pin'),lastPin=localStorage.getItem('luck_last_room');
-  if(S.pass&&teacherPin){try{await enterTeacherRoom(teacherPin);return;}catch(_){S.mode='teacherHome';render();}}
-  else if(lastPin){S.pin=lastPin;S.mode='publicLobby';try{await refreshRoom(true);return;}
-    catch(_){localStorage.removeItem('luck_last_room');}}
   S.mode='landing';S.pin='';S.room=null;render();}
 init();
 
