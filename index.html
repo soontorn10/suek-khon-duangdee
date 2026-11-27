@@ -91,14 +91,13 @@
 .projector .panel .room-card p{margin:4px auto}}
 @media print{body{background:white}.screen{background:white;color:#222;min-height:auto;padding:0}.screen:before,.screen:after,.topbar,.actions,.footer,.report-tabs,.toast,.no-print{display:none!important}.panel{color:#222;box-shadow:none;border:0;width:100%;max-width:none;padding:8px}.panel h2{color:#222}.metric,.mini-card{border:1px solid #aaa}table{min-width:0}th,td{font-size:10px;padding:5px}}
 
-/* ศึกคนดวงดี v8 — เล่นต่อเนื่อง ควบคุมง่าย */
+/* ศึกคนดวงดี v9 — การ์ดไม่มีชื่อซ้อนภาพ / เสียงเล่นครบ */
 .role-card{padding:3px;overflow:hidden;border-radius:8px;min-height:0;aspect-ratio:3/4;background:#fff!important}
 .role-card img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 5px #4e40703d)}
 .role-card .fallback{display:none;font-size:clamp(33px,5vw,60px)}
+.role-card .fallback small{display:block;font-size:12px;color:#554577}
 .role-card.broken img{display:none}.role-card.broken .fallback{display:grid;place-items:center;height:100%}
 .role-card.out{filter:grayscale(.85);opacity:.53}.role-card.out:after{font-size:clamp(45px,6vw,80px);inset:0;display:grid;place-content:center;background:#423c4a4c}
-.role-card .role-name{position:absolute;bottom:3px;left:3px;right:3px;border-radius:6px;background:#fffa;
-  color:#463765;font-size:clamp(10px,1vw,15px);text-align:center;padding:1px 2px;line-height:1.2}
 .master-shell{text-align:center;margin:4px auto 0;max-height:55vh}.master-shell img{max-width:min(75vw,920px);height:min(53vh,520px);object-fit:contain;filter:drop-shadow(0 15px 14px #34286679)}
 .master-shell+.role-row{display:none}.master-shell.failed{display:none}.master-shell.failed+.role-row{display:flex}
 .projector .role-card{width:clamp(90px,10vw,144px);height:auto;min-height:0;aspect-ratio:3/4}
@@ -154,7 +153,7 @@
 .room-list .room-item{background:#fff}.room-list .room-item .btn{min-width:105px}
 @media(max-width:760px){.student-mini img{width:55px;height:70px}.student-mini strong{font-size:16px}
   .answer-pair{grid-template-columns:repeat(2,1fr)}.math-focus{font-size:24px!important}.game-rule{font-size:24px}
-  .student-answer .answer-choice{font-size:17px}.role-card .role-name{font-size:11px}}
+  .student-answer .answer-choice{font-size:17px}}
 @media(max-height:760px) and (min-width:900px){.projector .game-rule{font-size:clamp(23px,2.6vw,33px);padding:11px}
   .projector .math-focus{font-size:clamp(22px,2.6vw,34px)!important}.projector .answer-choices{gap:5px;margin:6px auto}
   .projector .answer-choice{font-size:clamp(15px,1.45vw,20px);padding:6px 12px}
@@ -229,7 +228,7 @@
 <div id="loading" class="loading-mask hidden" role="status" aria-live="polite"><div><div class="loading-wheel"></div><span id="loading-label">กำลังเชื่อมต่อ...</span><p style="font-size:13px;opacity:.75">โปรดรอสักครู่</p></div></div>
 <audio id="bgm" loop preload="none"></audio>
 <script>
-/* ศึกคนดวงดี v8 | เมนูเรียบง่าย | ใช้ GS v7 */
+/* ศึกคนดวงดี v9 | เมนูเรียบง่าย + เสียงเต็มเพลง + ทดสอบได้แม้ไม่มีนักเรียน | GS v8 */
 const API='https://script.google.com/macros/s/AKfycbwJHNmQVsdUSQzy3gH8Y6vGGaswy5EymEx09gS9ewl0gu6j8TZbo4X2nKiDTqzU6mMT/exec';
 const SHEET_URL='https://docs.google.com/spreadsheets/d/1iLKSq7UXITmYcSxI2Ap_BQ0AyNeyRi17os51j3maswI/edit';
 const BGM_FILE='audio/background.mp3';
@@ -260,7 +259,7 @@ const S={mode:'landing',pin:'',room:null,student:null,pass:sessionStorage.getIte
   bgmVolume:Number(localStorage.getItem('luck_bgm_volume')??100),
   sfxVolume:Number(localStorage.getItem('luck_sfx_volume')??100),soundPanel:false,
   timerPaused:false,timerPauseAt:0,clockKey:'',champion:null,skipEffect:false,
-  fx:null,fxStopTimer:null};
+  fx:null,fxKind:null,fxStopTimer:null};
 const $=id=>document.getElementById(id),delay=ms=>new Promise(ok=>setTimeout(ok,ms));
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const uid=()=>crypto.randomUUID(),img=role=>'images/'+(IMG[role]||'cardmaster.png');
@@ -312,19 +311,22 @@ function sfx(kind='step'){const patterns={step:[620,785,930],intro:[590,745,990,
   reveal:[660,880,1100,1320],out:[1050,840,720,950],win:[720,920,1180,1440,1740],tick:[980,1250]};
   (patterns[kind]||patterns.step).forEach((n,i)=>note(n,i*(kind==='tick'?.08:.12),kind==='tick'?.09:.27));}
 function bgmLevel(duck=false){const el=$('bgm');if(el)el.volume=S.sound&&S.mode.startsWith('teacher')?
-  Math.max(0,Math.min(1,S.bgmVolume/100))*(duck ? .24 : 1):0;}
+  Math.max(0,Math.min(1,S.bgmVolume/100))*(S.fxKind==='out'?0:(duck ? .24 : 1)):0;}
 function bgm(play){const el=$('bgm');if(!el)return;
   if(!play||!S.sound||!S.mode.startsWith('teacher')){el.pause();return;}
   if(!el.getAttribute('src'))el.setAttribute('src',BGM_FILE);
   bgmLevel(!!S.fx);el.play().catch(()=>{});}
 function stopFx(){if(S.fx){S.fx.onended=null;S.fx.pause();S.fx.currentTime=0;S.fx=null;}
-  clearTimeout(S.fxStopTimer);S.fxStopTimer=null;bgmLevel(false);}
-function playFx(kind,maxSeconds=4){if(!S.sound||!S.mode.startsWith('teacher'))return null;
+  S.fxKind=null;clearTimeout(S.fxStopTimer);S.fxStopTimer=null;bgmLevel(false);}
+function playFx(kind,maxSeconds=0,onFinished){if(!S.sound||!S.mode.startsWith('teacher'))return null;
   stopFx();const a=new Audio(FX_FILE[kind]);a.preload='auto';a.volume=Math.max(0,Math.min(1,S.sfxVolume/100));
-  S.fx=a;bgmLevel(true);
-  a.onended=()=>{if(S.fx===a){S.fx=null;bgmLevel(false);}};
-  a.play().catch(()=>{if(S.fx===a){S.fx=null;bgmLevel(false);sfx(kind==='out'?'out':'reveal');}});
-  S.fxStopTimer=setTimeout(()=>{if(S.fx===a)stopFx();},maxSeconds*1000);return a;}
+  a.loop=kind==='out';S.fx=a;S.fxKind=kind;bgmLevel(true);
+  a.onended=()=>{if(S.fx!==a)return;S.fx=null;S.fxKind=null;
+    if(onFinished)onFinished();else bgmLevel(false);};
+  a.play().catch(()=>{if(S.fx===a){stopFx();sfx(kind==='out'?'out':'reveal');
+    if(onFinished)onFinished();}});
+  if(maxSeconds>0)S.fxStopTimer=setTimeout(()=>{if(S.fx===a)stopFx();},maxSeconds*1000);
+  return a;}
 function fireworksSound(seconds=2.8){if(!S.sound||!S.mode.startsWith('teacher'))return;
   try{const c=audioReady(),sr=c.sampleRate,length=Math.round(sr*.17),noise=c.createBuffer(1,length,sr);
     const buf=noise.getChannelData(0);for(let i=0;i<length;i++)buf[i]=Math.random()*2-1;
@@ -359,7 +361,7 @@ async function shuffleEffect(r){const list=r.stage===4?Array.from({length:r.grou
   await animatedCards(list,r.stage===4?'🏆 ดวงใครจะได้มง!':'🎲 สุ่มนี้...ชี้ชะตา!',4000);}
 function card(role,i=0,out=false){return `<div class="role-card ${out?'out':''}" style="--i:${i}">
   <img src="${img(role)}" alt="${esc(role)}" onerror="this.parentNode.classList.add('broken')">
-  <span class="fallback">${FACE[role]||'🎭'}</span><span class="role-name">${esc(role)}</span></div>`;}
+  <span class="fallback">${FACE[role]||'🎭'}<small>${esc(role)}</small></span></div>`;}
 function roleCards(a,out=[]){return `<div class="role-row">${a.map((x,i)=>card(x,i,out.includes(x))).join('')}</div>`;}
 function statusInfo(r,role){const d=(r.draws||[]).find(x=>x.eliminatedRoles.includes(role));
   return d?{out:true,stage:d.stage}:{out:false,stage:0};}
@@ -469,7 +471,7 @@ function teacherRoomView(){const r=S.room;if(!r)return '';
       <button class="btn mint" data-act="copy-link">📋 คัดลอกลิงก์</button></div>
       <div><img class="qr" src="${qrImage(r.pin)}" alt="QR Code เข้าห้องเกม"><p class="center">📱 สแกนเพื่อเล่น</p></div></div>
       ${groupProgress(r)}<div class="actions">
-      <button class="btn primary big" data-act="next-scene" ${r.registered?'':'disabled'}>🃏 เปิดตัวละคร!</button></div></section>`;
+      <button class="btn primary big" data-act="next-scene">🃏 เปิดตัวละคร!</button></div></section>`;
   if(r.phase==='ROLES')return `<section class="mission"><div class="mission-tag">CHARACTER REVEAL ✨</div>
     <h1>🃏 ใครได้เป็นอะไร?</h1><p class="lead">มาดูตัวละครประจำตัวกัน!</p>
     ${roleCards(names(r))}
@@ -671,7 +673,7 @@ function downloadReport(type){const r=S.report;if(!r)return;
 async function refreshRoom(force=false){if(!S.pin)return;const r=await getRoom(S.pin),old=S.room;
   S.room=r;const key=S.mode+'|'+r.pin+'|'+r.scene+(r.phase==='LOBBY'?'|'+r.registered:'');
   if(force||key!==S.viewKey){S.viewKey=key;render();}else updateLive();
-  if(old?.scene!==r.scene&&r.phase==='REVEAL'&&S.mode==='teacherRoom')playFx('reveal',3.2);}
+  if(old?.scene!==r.scene&&r.phase==='REVEAL'&&S.mode==='teacherRoom')playFx('reveal');}
 async function enterTeacherRoom(pin){S.pin=String(pin);S.mode='teacherRoom';S.champion=null;
   S.room=await getRoom(S.pin);S.viewKey='';render();bgm(true);
   if(S.room.phase==='DRAW'&&S.room.stage===4){try{S.champion=(await post('report',{pin:S.pin},true)).champion;render();}catch(_){}}}
@@ -700,16 +702,17 @@ function pauseTimer(){const k=timerKey(),s=Number(sessionStorage.getItem(k)||Dat
   if(S.timerPaused){sessionStorage.setItem(k,String(s+Date.now()-S.timerPauseAt));S.timerPaused=false;}
   else{S.timerPaused=true;S.timerPauseAt=Date.now();}updateClock();}
 async function nextTeacher(){const r=S.room,draw=r.phase==='REVEAL'&&['PRE','P2','P3','P4'].includes(r.questionId);
+  if(r.phase==='DRAW')stopFx(); // ออกจากฉากตกรอบ: หยุด out.mp3 แล้วคืนเสียง BGM
   if(r.phase==='INTRO')await openingEffect('เปิดโจทย์!');
   if(draw)await shuffleEffect(r);
   if(draw)loading(true,'กำลังตรวจผลสุ่มจากระบบ...');
   const changed=await post(draw?'draw':'advance',{pin:S.pin,expectedScene:r.scene},true);
   await refreshRoom(true);
   if(r.phase==='LOBBY')await introCards(S.room);
-  if(draw){playFx('reveal',2.4);
+  if(draw){
     if(r.stage===4){try{S.champion=(await post('report',{pin:S.pin},true)).champion;render();}catch(_){}
-      setTimeout(()=>{if(S.room?.phase==='DRAW'&&S.room.stage===4)burst(true);},2500);}
-    else setTimeout(()=>{if(S.room?.phase==='DRAW'&&S.room.stage===r.stage)playFx('out',3.3);},2500);}
+      playFx('reveal',0,()=>{if(S.room?.phase==='DRAW'&&S.room.stage===4)burst(true);});}
+    else playFx('reveal',0,()=>{if(S.room?.phase==='DRAW'&&S.room.stage===r.stage)playFx('out');});}
   if(r.phase==='SUMMARY')S.summaryOpen=false;
   if(changed?.alreadyAdvanced)toast('หน้าจอปรับตามสถานะเกมล่าสุดแล้ว');}
 function numbersFor(roll,keys){const obj={};keys.forEach(k=>{const el=document.querySelector(`[data-roll="${roll}"][data-score="${k}"]`);
@@ -724,7 +727,7 @@ async function handleAction(e){const el=e.target.closest('[data-act]');if(!el)re
   if(a==='teacher-login'){S.mode=S.pass?'teacherHome':'teacherLogin';render();bgm(true);audioReady();
     return;}
   if(a==='student-entry'){S.mode='studentEntry';render();return;}
-  if(a==='teacher-home'){S.mode='teacherHome';render();return;}
+  if(a==='teacher-home'){stopFx();S.mode='teacherHome';render();return;}
   if(a==='report-tab'){S.tab=el.dataset.tab;render();return;}
   if(a==='download-csv'||a==='download-txt'){downloadReport(a.endsWith('csv')?'csv':'txt');return;}
   if(a==='print'){window.print();return;}
@@ -734,8 +737,9 @@ async function handleAction(e){const el=e.target.closest('[data-act]');if(!el)re
   if(a==='show-summary'){S.summaryOpen=true;render();return;}
   if(a==='copy-link'){navigator.clipboard.writeText(qrLink(S.pin)).then(()=>toast('คัดลอกลิงก์แล้ว'))
     .catch(()=>toast('คัดลอกไม่สำเร็จ',true));return;}
-  if(a==='back-to-game'){guarded(()=>enterTeacherRoom(S.pin),'กำลังกลับเข้าเกม...');return;}
+  if(a==='back-to-game'){stopFx();guarded(()=>enterTeacherRoom(S.pin),'กำลังกลับเข้าเกม...');return;}
   if(a==='reports'||a==='refresh-report'){guarded(async()=>{
+    if(a==='reports')stopFx();
     if(a==='refresh-report'&&S.report){S.report=await post('report',{pin:S.pin},true);render();}
     else await openReports();},'กำลังดึงรายงานล่าสุด...');return;}
   if(a==='next-scene'){const r=S.room,missing=(r.registered||0)-(r.submitted||0);
