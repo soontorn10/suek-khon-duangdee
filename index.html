@@ -91,7 +91,7 @@
 .projector .panel .room-card p{margin:4px auto}}
 @media print{body{background:white}.screen{background:white;color:#222;min-height:auto;padding:0}.screen:before,.screen:after,.topbar,.actions,.footer,.report-tabs,.toast,.no-print{display:none!important}.panel{color:#222;box-shadow:none;border:0;width:100%;max-width:none;padding:8px}.panel h2{color:#222}.metric,.mini-card{border:1px solid #aaa}table{min-width:0}th,td{font-size:10px;padding:5px}}
 
-/* ศึกคนดวงดี v11 — ฉากเปิด/คิด/เฉลย/สุ่มคนละบุคลิก + จอครู 16:9 */
+/* ศึกคนดวงดี v12 — ฉากเปิด/คิด/เฉลย/สุ่มคนละบุคลิก + จอครู 16:9 */
 .role-card{padding:3px;overflow:hidden;border-radius:8px;min-height:0;aspect-ratio:3/4;background:#fff!important}
 .role-card img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 5px #4e40703d)}
 .role-card .fallback{display:none;font-size:clamp(33px,5vw,60px)}
@@ -314,9 +314,11 @@
 .projector .stage-opening{width:min(1480px,100%);max-width:none;display:grid;
   grid-template-columns:minmax(230px,.40fr) minmax(0,1fr);align-items:center;
   justify-items:stretch;gap:clamp(16px,2.5vw,42px);min-height:clamp(400px,66vh,680px)}
-.projector .stage-number{font-size:clamp(170px,22vw,385px);font-weight:1000;line-height:.86;
-  color:#ffedb0;letter-spacing:-.09em;text-align:center;
-  text-shadow:0 10px #6b4a8d,0 22px 40px #29164d9c;animation:stage-punch .7s ease-out both}
+.projector .stage-number{font-size:clamp(170px,20vw,350px);font-weight:1000;line-height:1;
+  color:#ffedb0;letter-spacing:.045em;text-align:center;white-space:nowrap;font-variant-numeric:tabular-nums;
+  -webkit-text-stroke:3px #49336d;paint-order:stroke fill;
+  text-shadow:3px 5px #7f59a0,7px 11px #533c79,12px 18px #382858,0 28px 38px #29164da8;
+  animation:stage-punch .7s ease-out both}
 .projector .stage-opening-copy{display:grid;align-content:center;justify-items:center;gap:clamp(10px,1.5vh,22px)}
 .projector .stage-opening-copy h1{font-size:clamp(46px,5.3vw,94px);line-height:1.06;margin:3px auto!important}
 .projector .stage-opening-copy .opening-story{font-size:clamp(23px,2.5vw,37px);
@@ -327,13 +329,20 @@
   72%{opacity:1;transform:scale(.95) rotate(2deg)}to{transform:scale(1) rotate(0)}}
 @media(min-width:900px) and (max-height:740px){
   .projector .stage-opening{min-height:0;gap:16px}
-  .projector .stage-number{font-size:clamp(145px,19vw,290px)}
+  .projector .stage-number{font-size:clamp(140px,18vw,285px)}
   .projector .stage-opening-copy h1{font-size:clamp(45px,4.6vw,77px)}
   .projector .stage-opening-copy .opening-story{font-size:clamp(20px,2.1vw,30px);padding:10px 18px}
   .projector .stage-opening-copy .rule-sub{font-size:17px}}
 @media(max-width:899px){.stage-opening{display:grid;justify-items:center}
-  .stage-number{font-size:clamp(105px,25vw,180px);font-weight:1000;line-height:.9;color:#ffebaf;
-    text-shadow:0 9px #66538d}}
+  .stage-number{font-size:clamp(105px,25vw,180px);font-weight:1000;line-height:.95;color:#ffebaf;
+    letter-spacing:.045em;-webkit-text-stroke:2px #49336d;
+    text-shadow:3px 5px #7b59a0,6px 9px #534078,0 14px 25px #2c1b53a0}}
+
+/* V12: รหัสครูผิดต้องเตือนในตำแหน่งที่เห็นทันที ไม่พึ่ง Toast ที่หายไปเอง */
+.login-error{background:#fff0f2;border:2px solid #ef829a;border-radius:13px;color:#9c2547;
+  padding:11px 14px;font-size:17px;font-weight:900;line-height:1.4;margin:10px 0 3px;text-align:center}
+.login-error.hidden{display:none}
+#login-form input[aria-invalid="true"]{border-color:#d84872;box-shadow:0 0 0 3px #f6b8c77a}
 
 /* V11: มือถือโฟกัสโจทย์และตัวเลือก + แสดงผลเฉลยรายบุคคล */
 .student-mini.compact{padding:4px 9px;gap:9px}
@@ -373,7 +382,7 @@
 <div id="loading" class="loading-mask hidden" role="status" aria-live="polite"><div><div class="loading-wheel"></div><span id="loading-label">กำลังเชื่อมต่อ...</span><p style="font-size:13px;opacity:.75">โปรดรอสักครู่</p></div></div>
 <audio id="bgm" loop preload="none"></audio>
 <script>
-/* ศึกคนดวงดี v11 | 4 ด่านแล้ววัด K1–K3, ผลเฉลยตรงจอครูและมือถือ | GS v10 */
+/* ศึกคนดวงดี v12 | เปิดคำถามทันทีหลังโหลด, เลขด่านชัด, เตือนรหัสครูผิด | GS v10 */
 const API='https://script.google.com/macros/s/AKfycbwJHNmQVsdUSQzy3gH8Y6vGGaswy5EymEx09gS9ewl0gu6j8TZbo4X2nKiDTqzU6mMT/exec';
 const SHEET_URL='https://docs.google.com/spreadsheets/d/1iLKSq7UXITmYcSxI2Ap_BQ0AyNeyRi17os51j3maswI/edit';
 const BGM_FILE='audio/background.mp3';
@@ -398,7 +407,7 @@ const REASONS={
   P4:'ก. ไม่ทราบแน่นอนว่ากลุ่มใดจะออก ส่วน ข. และ ค. ทราบผู้ชนะล่วงหน้า',
   K3:'การทดลองสุ่มซ้ำอาจได้ผลเหมือนเดิม หรือแตกต่างจากครั้งก่อนก็ได้'
 };
-const S={mode:'landing',pin:'',room:null,student:null,pass:sessionStorage.getItem('luck_admin')||'',
+const S={mode:'landing',pin:'',room:null,student:null,pass:sessionStorage.getItem('luck_admin')||'',loginError:'',
   report:null,tab:'overview',viewKey:'',busy:false,
   sound:localStorage.getItem('luck_sound')!=='off',summaryOpen:false,answerShown:false,drawReady:false,
   bgmVolume:Number(localStorage.getItem('luck_bgm_volume')??100),
@@ -486,11 +495,6 @@ function fireworksSound(seconds=2.8){if(!S.sound||!S.mode.startsWith('teacher'))
 function burst(big=false){document.querySelector('.fanfare')?.remove();const n=document.createElement('div');n.className='fanfare';
   n.innerHTML=Array.from({length:big?50:28},(_,i)=>`<i style="--i:${i}"></i>`).join('');document.body.appendChild(n);
   setTimeout(()=>n.remove(),3200);fireworksSound(big?3:2.5);}
-async function openingEffect(label){const el=$('countdown');el.classList.remove('hidden');
-  el.querySelector('span').textContent=label;loading(false);
-  for(const item of ['3','2','1']){const n=$('count-num');n.textContent=item;
-    n.classList.remove('pop-number');void n.offsetWidth;n.classList.add('pop-number');sfx('step');await delay(540);}
-  el.classList.add('hidden');}
 async function animatedCards(list,label,ms=3900){loading(false);
   const wrap=document.createElement('div');wrap.className='shuffling';
   wrap.innerHTML=`<h2>${esc(label)}</h2><div class="shuffle-deck">${list.map((k,i)=>{
@@ -567,7 +571,9 @@ function landingView(){return hero()+`<section class="panel narrow center"><h2>�
   <div class="actions"><button class="btn mint" data-act="student-entry">📱 นักเรียนเข้าร่วมด้วย PIN</button></div></section>`;}
 function loginView(){return landingView()+`<div class="login-modal"><section class="panel narrow" style="max-width:520px">
   <h2>🔐 ยืนยันรหัสครู</h2><form id="login-form"><input class="input" type="password" name="password" required
-    autocomplete="current-password" placeholder="รหัสผ่าน Admin"><div class="actions">
+    autocomplete="current-password" aria-invalid="${S.loginError?'true':'false'}" aria-describedby="login-error"
+    placeholder="รหัสผ่าน Admin"><div id="login-error" role="alert" class="login-error ${S.loginError?'':'hidden'}">${esc(S.loginError)}</div>
+    <div class="actions">
     <button class="btn primary big block" type="submit">เข้าสู่โหมดครู</button></div></form>
     <div class="center"><button class="btn" data-act="landing">ยกเลิก</button></div></section></div>`;}
 function teacherHomeView(){return hero(true)+`<section class="panel" style="max-width:1020px"><h2>✦ สร้างห้องเกมใหม่</h2>
@@ -910,12 +916,9 @@ function pauseTimer(){const k=timerKey(),s=Number(sessionStorage.getItem(k)||Dat
 async function nextTeacher(){const r=S.room,draw=r.phase==='REVEAL'&&['PRE','P2','P3','P4'].includes(r.questionId);
   if(draw&&!S.drawReady)throw Error('กรุณาเปิดฉากเตรียมสุ่มก่อน');
   if(r.phase==='DRAW')stopFx(); // ออกจากฉากตกรอบ: หยุด out.mp3 แล้วคืนเสียง BGM
-  // เริ่มโหลดโจทย์ระหว่างตัวเลข 3–2–1 เพื่อตัดช่วงค้างหลังนับเสร็จ
-  const early=r.phase==='INTRO'?post('advance',{pin:S.pin,expectedScene:r.scene},true):null;
-  if(early)await openingEffect('เตรียมคิด!');
   if(draw)await shuffleEffect(r);
   if(draw)loading(true,'กำลังตรวจผลสุ่มจากระบบ...');
-  const changed=await (early||post(draw?'draw':'advance',{pin:S.pin,expectedScene:r.scene},true));
+  const changed=await post(draw?'draw':'advance',{pin:S.pin,expectedScene:r.scene},true);
   acceptRoom(changed,true); // ผลลัพธ์จากการกดมีข้อมูลห้องอยู่แล้ว ไม่ต้อง GET ซ้ำ
   if(r.phase==='LOBBY')await introCards(S.room);
   if(r.phase==='RESULTS')playFx('reveal');
@@ -935,7 +938,7 @@ async function handleAction(e){const el=e.target.closest('[data-act]');if(!el)re
   if(a==='sound-settings'){S.soundPanel=!S.soundPanel;render();return;}
   if(a==='test-sfx'){sfx('win');fireworksSound(2.6);return;}
   if(a==='landing'){S.mode='landing';render();return;}
-  if(a==='teacher-login'){S.mode=S.pass?'teacherHome':'teacherLogin';render();bgm(true);audioReady();
+  if(a==='teacher-login'){S.loginError='';S.mode=S.pass?'teacherHome':'teacherLogin';render();bgm(true);audioReady();
     return;}
   if(a==='student-entry'){S.mode='studentEntry';render();return;}
   if(a==='teacher-home'){stopFx();S.mode='teacherHome';render();return;}
@@ -959,7 +962,7 @@ async function handleAction(e){const el=e.target.closest('[data-act]');if(!el)re
     else await openReports();},'กำลังดึงรายงานล่าสุด...');return;}
   if(a==='next-scene'){const r=S.room,missing=(r.registered||0)-(r.submitted||0);
     if(r.phase==='QUESTION'&&missing>0&&!window.confirm(`มีผู้ยังไม่ส่งคำตอบ ${missing} คน\nต้องการปิดรับคำตอบและไปต่อหรือไม่?`))return;
-    guarded(nextTeacher,'กำลังดำเนินภารกิจ...');return;}
+    guarded(nextTeacher,r.phase==='INTRO'?'กำลังเปิดโจทย์คณิตศาสตร์...':'กำลังดำเนินภารกิจ...');return;}
   if(a==='save-p'||a==='save-a'){const roll=el.dataset.roll;
     guarded(async()=>{const fields=a==='save-p'?['p2Score','p3Score','p4Score']:
       ['aSituation','aMethod','aBenefit'];
@@ -969,8 +972,10 @@ async function handleAction(e){const el=e.target.closest('[data-act]');if(!el)re
 async function handleForm(e){const form=e.target,id=form.id;
   if(!['login-form','create-form','join-form','register-form'].includes(id)&&!form.matches('.answer-form'))return;
   e.preventDefault();const f=new FormData(form);
-  if(id==='login-form')return guarded(async()=>{S.pass=String(f.get('password')||'');
-    try{await post('login',{},true);}catch(e){S.pass='';throw e;}
+  if(id==='login-form')return guarded(async()=>{S.loginError='';S.pass=String(f.get('password')||'');
+    try{await post('login',{},true);}catch(e){S.pass='';
+      if(e.message==='ADMIN_DENIED'){S.loginError='❌ รหัสผ่านไม่ถูกต้อง กรุณาลองอีกครั้ง';
+        render();document.querySelector('#login-form input[name="password"]')?.focus();return;}throw e;}
     sessionStorage.setItem('luck_admin',S.pass);
     S.mode='teacherHome';render();bgm(true);toast('เข้าสู่โหมดครูสำเร็จ');},'กำลังตรวจรหัสครู...');
   if(id==='create-form')return guarded(async()=>{bgm(true);
@@ -999,7 +1004,9 @@ async function handleForm(e){const form=e.target,id=form.id;
 }
 document.addEventListener('click',e=>handleAction(e));
 document.addEventListener('submit',e=>handleForm(e));
-document.addEventListener('input',e=>{const key=e.target?.dataset?.volume;if(!['bgm','sfx'].includes(key))return;
+document.addEventListener('input',e=>{if(e.target?.matches?.('#login-form input[name="password"]')&&S.loginError){
+    S.loginError='';$('login-error')?.classList.add('hidden');e.target.setAttribute('aria-invalid','false');}
+  const key=e.target?.dataset?.volume;if(!['bgm','sfx'].includes(key))return;
   const v=Math.max(0,Math.min(100,Number(e.target.value)||0));
   if(key==='bgm'){S.bgmVolume=v;localStorage.setItem('luck_bgm_volume',String(v));bgmLevel(!!S.fx);}
   else{S.sfxVolume=v;localStorage.setItem('luck_sfx_volume',String(v));if(S.fx)S.fx.volume=v/100;}
