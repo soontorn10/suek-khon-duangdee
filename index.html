@@ -91,7 +91,7 @@
 .projector .panel .room-card p{margin:4px auto}}
 @media print{body{background:white}.screen{background:white;color:#222;min-height:auto;padding:0}.screen:before,.screen:after,.topbar,.actions,.footer,.report-tabs,.toast,.no-print{display:none!important}.panel{color:#222;box-shadow:none;border:0;width:100%;max-width:none;padding:8px}.panel h2{color:#222}.metric,.mini-card{border:1px solid #aaa}table{min-width:0}th,td{font-size:10px;padding:5px}}
 
-/* ศึกคนดวงดี v10 — ฉากเปิด/คิด/เฉลย/สุ่มคนละบุคลิก + จอครู 16:9 */
+/* ศึกคนดวงดี v11 — ฉากเปิด/คิด/เฉลย/สุ่มคนละบุคลิก + จอครู 16:9 */
 .role-card{padding:3px;overflow:hidden;border-radius:8px;min-height:0;aspect-ratio:3/4;background:#fff!important}
 .role-card img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 5px #4e40703d)}
 .role-card .fallback{display:none;font-size:clamp(33px,5vw,60px)}
@@ -310,13 +310,70 @@
   .question-panel .answer-choices{grid-template-columns:1fr}.answer-highlight>strong{font-size:29px}
   .answer-highlight>strong.numeric{font-size:65px}.ready-rule{font-size:27px}}
 
+/* V11: เลขฉากขนาดใหญ่ ทำให้เห็นชัดว่าเปิดด่านใหม่แล้ว */
+.projector .stage-opening{width:min(1480px,100%);max-width:none;display:grid;
+  grid-template-columns:minmax(230px,.40fr) minmax(0,1fr);align-items:center;
+  justify-items:stretch;gap:clamp(16px,2.5vw,42px);min-height:clamp(400px,66vh,680px)}
+.projector .stage-number{font-size:clamp(170px,22vw,385px);font-weight:1000;line-height:.86;
+  color:#ffedb0;letter-spacing:-.09em;text-align:center;
+  text-shadow:0 10px #6b4a8d,0 22px 40px #29164d9c;animation:stage-punch .7s ease-out both}
+.projector .stage-opening-copy{display:grid;align-content:center;justify-items:center;gap:clamp(10px,1.5vh,22px)}
+.projector .stage-opening-copy h1{font-size:clamp(46px,5.3vw,94px);line-height:1.06;margin:3px auto!important}
+.projector .stage-opening-copy .opening-story{font-size:clamp(23px,2.5vw,37px);
+  padding:clamp(13px,2vh,24px) clamp(18px,2vw,30px);width:100%}
+.projector .stage-opening-copy .rule-sub{font-size:clamp(17px,1.55vw,25px);margin:0 auto}
+.projector .stage-opening-copy .actions{margin:3px auto}
+@keyframes stage-punch{from{opacity:0;transform:scale(1.4) rotate(-8deg)}
+  72%{opacity:1;transform:scale(.95) rotate(2deg)}to{transform:scale(1) rotate(0)}}
+@media(min-width:900px) and (max-height:740px){
+  .projector .stage-opening{min-height:0;gap:16px}
+  .projector .stage-number{font-size:clamp(145px,19vw,290px)}
+  .projector .stage-opening-copy h1{font-size:clamp(45px,4.6vw,77px)}
+  .projector .stage-opening-copy .opening-story{font-size:clamp(20px,2.1vw,30px);padding:10px 18px}
+  .projector .stage-opening-copy .rule-sub{font-size:17px}}
+@media(max-width:899px){.stage-opening{display:grid;justify-items:center}
+  .stage-number{font-size:clamp(105px,25vw,180px);font-weight:1000;line-height:.9;color:#ffebaf;
+    text-shadow:0 9px #66538d}}
+
+/* V11: มือถือโฟกัสโจทย์และตัวเลือก + แสดงผลเฉลยรายบุคคล */
+.student-mini.compact{padding:4px 9px;gap:9px}
+.student-mini.compact img{width:42px;height:54px}.student-mini.compact strong{font-size:15px}
+.student-mini.compact small{font-size:11px}.student-mini.compact .status{font-size:11px}
+.student-math-label{display:block;width:fit-content;max-width:100%;margin:0 auto 10px;
+  background:#5c4e9c;color:white;border-radius:30px;padding:8px 17px;font-weight:900;font-size:18px}
+.student-answer{background:#fefbff;border:3px solid white;border-radius:23px;
+  padding:16px 14px;color:#4b4078;box-shadow:0 7px #51468b}
+.student-answer h2{color:#463b80;font-size:clamp(21px,5.3vw,30px);text-align:center;line-height:1.32}
+.student-choice-static,.student-scenario-static{background:white;border:2px solid #ebe5f6;border-radius:12px;
+  padding:10px;margin:7px 0;font-size:17px;font-weight:750;line-height:1.3}
+.student-sent{margin:12px 0 0;font-weight:900;text-align:center}
+.triple-item h3{font-size:20px;color:#5c46a2;margin:0 0 5px}
+.triple-item p{font-size:17px;line-height:1.4}
+.scenario-prompt{margin:9px 0 10px;color:#503a86;font-size:17px;font-weight:900}
+.student-feedback{margin:18px auto 0;max-width:620px;background:#fafffc;border:3px solid white;
+  color:#375c52;border-radius:22px;padding:17px;text-align:center;box-shadow:0 8px #438b75}
+.student-feedback.is-wrong{background:#fff0f4;color:#874453;box-shadow:0 8px #a55e7c}
+.student-feedback-title{font-size:clamp(23px,5.4vw,34px);font-weight:1000;margin:6px auto 13px}
+.student-feedback p{font-weight:750;margin:9px auto 5px}
+.student-feedback-answer{border:2px dashed #d2bfda;border-radius:14px;padding:9px;font-size:20px;font-weight:800}
+.student-feedback-key{background:#dcf8e8;border:2px solid #8dd6b3;border-radius:14px;padding:12px;
+  color:#176548;font-size:clamp(21px,5vw,30px);font-weight:950}
+.student-feedback .feedback-worksheet{font-size:14px;line-height:1.42;color:#665c81;margin:15px 0 0}
+.feedback-item{background:white;border:2px solid #d9e9e0;border-radius:14px;padding:10px;
+  text-align:left;margin:10px 0;color:#475f59}
+.feedback-item.is-correct{border-color:#79d4a6;background:#edfff3}
+.feedback-item.is-wrong{border-color:#e5a0b0;background:#fff0f4;color:#924b61}
+.feedback-item b{font-size:18px}.feedback-item p{font-size:16px;margin:5px 0 0}
+@media(max-width:600px){.student-answer{padding:13px 10px}.student-answer .answer-choice{padding:12px}
+  .triple-item{padding:11px}.triple-item .choice-group{display:flex;gap:8px}.triple-item .radio-btn{font-size:18px}}
+
 </style></head><body>
 <div id="app"></div><div id="toast" class="toast hidden" role="status"></div>
 <div id="countdown" class="countdown hidden" aria-live="assertive"><strong id="count-num">3</strong><span>สุ่มนี้...ชี้ชะตา!</span></div>
 <div id="loading" class="loading-mask hidden" role="status" aria-live="polite"><div><div class="loading-wheel"></div><span id="loading-label">กำลังเชื่อมต่อ...</span><p style="font-size:13px;opacity:.75">โปรดรอสักครู่</p></div></div>
 <audio id="bgm" loop preload="none"></audio>
 <script>
-/* ศึกคนดวงดี v10 | ฉากเกมโชว์ชัดเจน คำถาม-เฉลย-สุ่ม แสดงผลตอบร่วมกับเฉลย | GS v9 */
+/* ศึกคนดวงดี v11 | 4 ด่านแล้ววัด K1–K3, ผลเฉลยตรงจอครูและมือถือ | GS v10 */
 const API='https://script.google.com/macros/s/AKfycbwJHNmQVsdUSQzy3gH8Y6vGGaswy5EymEx09gS9ewl0gu6j8TZbo4X2nKiDTqzU6mMT/exec';
 const SHEET_URL='https://docs.google.com/spreadsheets/d/1iLKSq7UXITmYcSxI2Ap_BQ0AyNeyRi17os51j3maswI/edit';
 const BGM_FILE='audio/background.mp3';
@@ -399,7 +456,8 @@ function sfx(kind='step'){const patterns={step:[620,785,930],intro:[590,745,990,
   reveal:[660,880,1100,1320],out:[1050,840,720,950],win:[720,920,1180,1440,1740],tick:[980,1250]};
   (patterns[kind]||patterns.step).forEach((n,i)=>note(n,i*(kind==='tick'?.08:.12),kind==='tick'?.09:.27));}
 function bgmLevel(duck=false){const el=$('bgm');if(el)el.volume=S.sound&&S.mode.startsWith('teacher')?
-  Math.max(0,Math.min(1,S.bgmVolume/100))*(S.fxKind==='out'?0:(duck ? .24 : 1)):0;}
+  (S.mode==='teacherRoom'&&S.room?.phase==='DRAW'&&S.room.stage===4?1:
+    Math.max(0,Math.min(1,S.bgmVolume/100))*(S.fxKind==='out'?0:(duck ? .24 : 1))):0;}
 function bgm(play){const el=$('bgm');if(!el)return;
   if(!play||!S.sound||!S.mode.startsWith('teacher')){el.pause();return;}
   if(!el.getAttribute('src'))el.setAttribute('src',BGM_FILE);
@@ -453,7 +511,11 @@ function statusInfo(r,role){const d=(r.draws||[]).find(x=>x.eliminatedRoles.incl
   return d?{out:true,stage:d.stage}:{out:false,stage:0};}
 function sentKey(){return 'luck_v6_sent_'+(S.room?.roomId||S.pin)+'_'+S.student?.rollNo;}
 function getSent(){try{return JSON.parse(localStorage.getItem(sentKey())||'{}');}catch(_){return {};}}
-function storeSent(q){const a=getSent();a[q]=true;localStorage.setItem(sentKey(),JSON.stringify(a));}
+function storeSent(q,answer){const a=getSent();let v=answer;
+  if(q==='P4'&&typeof v==='string'){try{v=JSON.parse(v);}catch(_){}}
+  a[q]=v===undefined||v===null?a[q]||true:{sent:true,answer:v};
+  localStorage.setItem(sentKey(),JSON.stringify(a));}
+function ownAnswer(q){const v=getSent()[q];return v&&typeof v==='object'&&'answer'in v?v.answer:null;}
 function saveStudent(){if(S.student)localStorage.setItem('luck_v6_student',JSON.stringify(S.student));}
 function header(){const teacher=S.mode.startsWith('teacher'),pin=S.room?.pin||S.pin;
   return `<header class="topbar"><span class="badge">🎮 ${teacher?'TEACHER MODE':S.mode==='studentRoom'?'PLAYER MODE':'RANDOM SHOW'}</span>
@@ -541,13 +603,12 @@ function answerProgress(r){return `<div class="response-progress" aria-label="�
   </div>`;}
 function nextLabel(r){if(r.phase==='LOBBY')return '🃏 เปิดตัวละคร!';
   if(r.phase==='ROLES')return '🔥 เปิดด่านที่ 1';if(r.phase==='INTRO')return '❓ เปิดคำถามคณิตศาสตร์';
-  if(r.phase==='QUESTION')return '📊 ดูผลตอบและเฉลย';
-  if(r.phase==='RESULTS')return '✨ เฉลย';
+  if(r.phase==='QUESTION')return '📊 ดูผลตอบ';
+  if(r.phase==='RESULTS')return '✨ เปิดเฉลย';
   if(r.phase==='REVEAL')return ['PRE','P2','P3','P4'].includes(r.questionId)?'🎲 เตรียมสุ่มการ์ด':
-    r.questionId==='K1'?'🧠 คำถามถัดไป':r.questionId==='K2'?'🚀 ไปด่านที่ 2':'📚 สรุปองค์ความรู้';
-  if(r.phase==='DRAW')return r.stage===1?'🧠 ตอบคำถามหลังสุ่ม':
-    r.stage===4?'🧠 ชวนคิดหลังเกม':`🚀 ไปด่านที่ ${r.stage+1}`;
-  if(r.phase==='SUMMARY')return '📝 ไป Exit Ticket';return '';}
+    r.questionId==='K1'?'🧠 ไปข้อ K2':r.questionId==='K2'?'🧠 ไปข้อ K3':'📝 ไป Exit Ticket';
+  if(r.phase==='DRAW')return r.stage===4?'🧠 สรุปองค์ความรู้':`🚀 เปิดด่านที่ ${r.stage+1}`;
+  if(r.phase==='SUMMARY')return '🧠 เริ่มคำถาม K1–K3';return '';}
 function actionButton(r){return r.phase==='EXIT'?'':`<div class="actions"><button class="btn primary big" data-act="next-scene">${nextLabel(r)}</button></div>`;}
 function teacherRoomView(){const r=S.room;if(!r)return '';
   if(r.phase==='LOBBY')return `<section class="mission"><div class="mission-tag">GAME ROOM READY</div>
@@ -566,16 +627,17 @@ function teacherRoomView(){const r=S.room;if(!r)return '';
       <span>🎲 สุ่มได้การ์ดใด ผู้ถือการ์ดชื่อนั้นทุกกลุ่มตกรอบ</span>
       <span>🏆 รอดจนถึงรอบชิง มีสิทธิ์ลุ้นเป็นแชมป์</span></div>
     <p class="study-reminder">📚 ตกรอบแล้ว ยังต้องตอบคำถามและทำใบภารกิจทุกด่าน</p>${actionButton(r)}</section>`;
-  if(r.phase==='INTRO')return `<section class="mission stage-opening"><div class="mission-tag">🔥 MISSION ${r.stage} / 4 · NEW ROUND</div>
+  if(r.phase==='INTRO')return `<section class="mission stage-opening"><div class="stage-number">0${r.stage}</div>
+    <div class="stage-opening-copy"><div class="mission-tag">🔥 NEW MISSION ${r.stage} / 4</div>
     <h1>${esc(STAGE[r.stage].name)}</h1>
     <div class="opening-story">${esc(r.stage===1?'ศึกเริ่มแล้ว! การสุ่มการ์ดจะตัดสินว่าใครได้ไปต่อ!':
       r.stage===2?'สี่ตัวละครยังรอด...แต่การสุ่มครั้งใหม่กำลังจะเปลี่ยนทุกอย่าง!':
       r.stage===3?'เหลือแค่สองตัวละคร ใครจะได้ผ่านเข้าสู่รอบชิง?':
       'ถึงรอบชิงแล้ว! การสุ่มหมายเลขกลุ่มจะตัดสินผู้คว้ามง!')}</div>
     <p class="rule-sub">❓ แต่ก่อนจะสุ่มจริง ทุกคนต้องตอบคำถามคณิตศาสตร์ให้ได้!</p>
-    ${actionButton(r)}</section>`;
+    ${actionButton(r)}</div></section>`;
   if(r.phase==='QUESTION')return questionTeacherView(r);
-  if(r.phase==='RESULTS')return resultsTeacherView(r);
+  if(r.phase==='RESULTS')return revealTeacherView(r);
   if(r.phase==='REVEAL')return S.drawReady?drawReadyView(r):revealTeacherView(r);
   if(r.phase==='DRAW')return drawTeacherView(r);
   if(r.phase==='SUMMARY')return `<section class="mission"><div class="mission-tag">KNOWLEDGE UNLOCKED 🧠</div>
@@ -591,7 +653,7 @@ function teacherRoomView(){const r=S.room;if(!r)return '';
       <p class="exit-hints">📝 เขียนในใบภารกิจ: สถานการณ์ • วิธีสุ่ม • ประโยชน์</p>
       <p class="center muted">ประมาณ 2 นาที · ถ้าไม่ทันเขียนต่อได้ · ไม่ต้องส่งมือถือ</p>
       <div class="actions"><button class="btn mint" data-act="reports">📊 รายงานผลชั้นเรียน</button></div></section>`;}
-function qBadge(r){return r.questionId==='K3'?'🧠 ชวนคิดหลังเกม':`ภารกิจ ${r.stage} · MATH MISSION`;}
+function qBadge(r){return /^K[123]$/.test(r.questionId)?`🧠 ตรวจสอบความรู้ ${r.questionId} / 3`:`ภารกิจ ${r.stage} · MATH MISSION`;}
 function questionTeacherView(r){const q=r.question||{},isP4=r.questionId==='P4';
   return `<section class="mission question-heading"><div class="mission-tag">${qBadge(r)}</div>
     <h1>❓ ถึงเวลาคิด!</h1></section>
@@ -602,7 +664,7 @@ function questionTeacherView(r){const q=r.question||{},isP4=r.questionId==='P4';
       ${['P2','P3'].includes(r.questionId)?`<div class="hud"><span class="timer" id="timer">03:00</span>
         <button class="btn" data-act="timer-pause" id="pause-btn">⏸ พักเวลา</button>
         <button class="btn" data-act="timer-reset">↻ เริ่ม 3 นาทีใหม่</button></div>`:''}
-      <div class="worksheet-cue">📄 ${r.questionId==='K3'?'ชวนคิดหลังเกม':`ใบภารกิจด่าน ${r.stage}`}${['K1','K2'].includes(r.questionId)?` · ข้อ ${r.questionId==='K1'?1:2}`:''}</div>
+      <div class="worksheet-cue">📄 ${/^K[123]$/.test(r.questionId)?`ใบภารกิจ · ชวนคิดหลังเกม ${r.questionId}`:`ใบภารกิจด่าน ${r.stage}`}</div>
       <p class="muted center worksheet-hint">${r.questionId==='P2'?'เขียนชื่อการ์ดที่เหลือ แผนภาพ และผลลัพธ์ทั้งหมดในใบภารกิจ':
         r.questionId==='P3'?'เขียนผลลัพธ์ทั้งหมดลงใบภารกิจ':
         r.questionId==='P4'?'เลือกทั้ง 3 สถานการณ์ในใบภารกิจและมือถือ':'เลือกคำตอบในใบภารกิจและมือถือ'}</p>
@@ -624,7 +686,7 @@ function resultsTeacherView(r){const st=r.questionStats||{submitted:0,distributi
     <div class="discussion-guide">💬 ${st.submitted===r.registered?'ทุกคนส่งแล้ว ชวนคิดว่าแต่ละคำตอบแตกต่างกันตรงไหน':
       'ยังมีคนไม่ได้ส่งคำตอบ ชวนเพื่อนอธิบายแนวคิดสั้น ๆ ก่อนเฉลย'}</div>${actionButton(r)}
     </section>`;}
-function revealTeacherView(r){const q=r.question||{},a=r.reveal?.answer,opts=q.options||[],id=r.questionId;
+function revealTeacherView(r){const q=r.question||{},a=r.reveal?.answer,opts=q.options||[],id=r.questionId,shown=r.phase==='REVEAL';
   const stats=r.questionStats||{submitted:0,distribution:{}},p4=id==='P4';
   const summary=p4?`<div class="question-grid">${(stats.distribution||[]).map((d,i)=>
     `<div class="qbox"><h3>สถานการณ์ ${'กขค'[i]}</h3>${statBars(d,stats.submitted)}</div>`).join('')}</div>`:
@@ -634,11 +696,11 @@ function revealTeacherView(r){const q=r.question||{},a=r.reveal?.answer,opts=q.o
   const outcomeList=r.reveal?.outcomes?`<div class="answer-pair">${r.reveal.outcomes.map(x=>
     `<span>${x.map(esc).join(' + ')}</span>`).join('')}</div>`:'';
   const correct=r.questionStats?.correct,allRight=Array.isArray(correct)?correct.every(n=>n===r.registered):correct===r.registered;
-  return `<section class="mission answer-heading"><div class="mission-tag">✅ MATH ANSWER · ด่าน ${r.stage}</div>
-    <h1>${S.answerShown?'เฉลยคำตอบที่ถูกต้อง!':'มาดูคำตอบกัน!'}</h1></section>
+  return `<section class="mission answer-heading"><div class="mission-tag">${shown?'✅ เฉลยคณิตศาสตร์':'📊 ผลตอบจากทั้งห้อง'} · ${/^K[123]$/.test(id)?id:`ด่าน ${r.stage}`}</div>
+    <h1>${shown?'เฉลยคำตอบที่ถูกต้อง!':'มาดูคำตอบกัน!'}</h1></section>
     <section class="panel wide answer-panel">
       <div class="answer-question">${esc(q.text||'')}</div>
-      ${!S.answerShown?`<div class="answer-summary"><b>📊 ผลตอบจากนักเรียน ${stats.submitted} / ${r.registered} คน</b>
+      ${!shown?`<div class="answer-summary"><b>📊 ผลตอบจากนักเรียน ${stats.submitted} / ${r.registered} คน</b>
         ${summary}</div><div class="teacher-discussion">💬 ชวนคิดว่าแต่ละคนเลือกคำตอบนี้เพราะอะไร</div>
         <div class="actions"><button class="btn primary big" data-act="show-answer">✅ เปิดเฉลยคำตอบ!</button></div>`:
         `<div class="answer-highlight"><span>✅ เฉลยคำตอบที่ถูกต้อง</span>
@@ -682,33 +744,57 @@ function drawTeacherView(r){const d=(r.draws||[]).find(x=>x.stage===r.stage),sur
     <div class="survival-footer"><span>📢 ทุกกลุ่มที่ถือการ์ดชื่อตรงกับผลสุ่มจะตกรอบพร้อมกัน</span>
       ${actionButton(r)}<small>ผู้ที่ตกรอบยังต้องตอบคำถามและทำใบภารกิจต่อ</small></div>`;}
 function formQuestion(r){const q=r.question||{},id=r.questionId,done=getSent()[id];
-  if(done)return `<div class="student-prompt"><h2>📝 ${esc(q.text||'')}</h2>
-    <div class="notice">✅ ส่งคำตอบแล้ว รอดูผลและเฉลยบนจอครู</div></div>`;
-  let control='';if(q.type==='number')control='<input class="input center" type="number" name="answer" min="0" max="99" inputmode="numeric" required placeholder="จำนวนผลลัพธ์ (แบบ)" style="font-size:27px">';
+  const isK=/^K[123]$/.test(id),title=isK?`🧠 ชวนคิดหลังเกม · ${id}`:'❓ คำถามคณิตศาสตร์';
+  const question=`<div class="question-label student-math-label">${title}</div><h2>${esc(q.text||'')}</h2>`;
+  if(done){const choices=q.type==='triple'?q.scenarios.map((t,i)=>`<div class="student-scenario-static"><b>สถานการณ์ ${'กขค'[i]}</b> ${esc(t.replace(/^[กขค]\.\s*/,''))}</div>`).join(''):
+    q.options?.map(t=>`<div class="student-choice-static">${esc(t)}</div>`).join('')||'';
+    return `<div class="student-answer student-prompt">${question}${choices}
+      <div class="notice student-sent">✅ ส่งคำตอบแล้ว · รอครูเปิดเฉลย</div></div>`;}
+  let control='';if(q.type==='number')control='<input class="input center" type="number" name="answer" min="0" max="99" inputmode="numeric" required placeholder="กรอกจำนวนผลลัพธ์ (แบบ)" style="font-size:27px">';
   else if(q.type==='triple')control=`<div class="triple">${q.scenarios.map((txt,i)=>
-    `<div class="triple-item"><p>${esc(txt)}</p><div class="choice-group">${['เป็น','ไม่เป็น'].map(choice=>
+    `<div class="triple-item"><h3>สถานการณ์ ${'กขค'[i]}</h3><p>${esc(txt.replace(/^[กขค]\.\s*/,''))}</p>
+    <div class="scenario-prompt">❓ สถานการณ์นี้เป็นการทดลองสุ่มหรือไม่?</div>
+    <div class="choice-group">${['เป็น','ไม่เป็น'].map(choice=>
       `<label class="radio-btn"><input type="radio" name="p4_${i}" value="${choice}" required> ${choice}</label>`).join('')}</div></div>`).join('')}</div>`;
-  else control=`<div class="answer-choices">${q.options.map((opt,i)=>{
+  else control=`<div class="answer-choices">${(q.options||[]).map((opt,i)=>{
     const answer=id==='PRE'?opt:['ก','ข','ค'][i];return `<label class="answer-choice">
       <input type="radio" name="answer" value="${answer}" required> ${esc(opt)}</label>`;}).join('')}</div>`;
-  const hint=id==='P2'?'✏️ ในใบภารกิจต้องเขียนการ์ดที่เหลือ แผนภาพ และผลลัพธ์ทั้งหมด':
-    id==='P3'?'✏️ ในใบภารกิจต้องเขียนผลลัพธ์ทั้งสองแบบ':
+  const hint=id==='P2'?'✏️ เขียนการ์ดที่เหลือ แผนภาพ และผลลัพธ์ทั้งหมดในใบภารกิจ':
+    id==='P3'?'✏️ เขียนผลลัพธ์ทั้งสองแบบในใบภารกิจ':
     '✏️ ทำเครื่องหมายคำตอบในใบภารกิจด้วย';
   return `<form class="student-answer student-prompt answer-form" data-q="${id}">
-    <div class="question-label">${id==='K3'?'🧠 ชวนคิดหลังเกม':'โจทย์คณิตศาสตร์'}</div>
-    <h2>${esc(q.text||'')}</h2>${control}<p class="muted center">${hint}</p>
+    ${question}${control}<p class="muted center">${hint}</p>
     <button class="btn primary big block" type="submit">📤 ส่งคำตอบ</button></form>`;}
+function feedbackView(r){const id=r.questionId,correct=r.reveal?.answer,answer=ownAnswer(id),q=r.question||{};
+  if(correct===undefined||correct===null)return '<div class="waiting">⏳ รอครูเปิดเฉลยคำตอบ</div>';
+  if(id==='P4'){
+    const items=['ก','ข','ค'].map((letter,i)=>{const mine=Array.isArray(answer)?answer[i]:null,
+      key=correct[i],ok=mine!==null&&mine!==undefined&&mine===key;
+      return `<div class="feedback-item ${mine===null||mine===undefined?'unknown':ok?'is-correct':'is-wrong'}">
+        <b>สถานการณ์ ${letter} · ${mine===null||mine===undefined?'ยังไม่มีข้อมูลคำตอบ':ok?'✅ ถูกต้อง':'❌ ยังไม่ตรง'}</b>
+        <p>คำตอบของคุณ: <strong>${esc(mine??'—')}</strong> · เฉลย: <strong>${esc(key)}</strong></p></div>`;}).join('');
+    return `<div class="student-feedback"><div class="student-feedback-title">✨ เฉลยคำตอบด่าน 4</div>${items}
+      <p class="feedback-worksheet">📄 ตรวจคำตอบในใบภารกิจด้วย</p></div>`;}
+  const known=answer!==null&&answer!==undefined,ok=known&&
+    (q.type==='number'?Number(answer)===Number(correct):String(answer)===String(correct));
+  const display=x=>q.type==='number'?`${x} แบบ`:id==='PRE'?String(x):
+    (q.options||[])[['ก','ข','ค'].indexOf(x)]||String(x);
+  return `<div class="student-feedback ${!known?'unknown':ok?'is-correct':'is-wrong'}">
+    <div class="student-feedback-title">${!known?'✨ เฉลยคำตอบ':ok?'✅ คุณตอบถูกต้อง!':'❌ คำตอบยังไม่ตรงเฉลย'}</div>
+    <p>คำตอบของคุณ</p><div class="student-feedback-answer">${known?esc(display(answer)):'— ไม่มีข้อมูลคำตอบในเครื่องนี้ —'}</div>
+    <p>เฉลยที่ถูกต้อง</p><div class="student-feedback-key">${esc(display(correct))}</div>
+    <p class="feedback-worksheet">📄 ${['P2','P3'].includes(id)?'อย่าลืมตรวจแผนภาพและวิธีคิดในใบภารกิจด้วย การตอบตัวเลขถูกยังไม่ยืนยันคะแนน P':'ตรวจคำตอบในใบภารกิจด้วย'}</p></div>`;}
 function studentRoomView(){const r=S.room,p=S.student;if(!r||!p)return '';
   const status=statusInfo(r,p.role),won=r.winnerGroup===Number(p.groupNo)&&!status.out&&r.stage===4;
   const content=r.phase==='QUESTION'?formQuestion(r):
-    r.phase==='RESULTS'?'<div class="waiting">📊 ส่งคำตอบแล้ว ดูผลการตอบบนจอครู</div>':
-    r.phase==='REVEAL'?'<div class="waiting">✨ ตรวจเฉลยบนจอครู และแก้ความเข้าใจในใบภารกิจ</div>':
+    r.phase==='RESULTS'?'<div class="waiting">📊 ครูกำลังดูผลการตอบ · รอครูเปิดเฉลย</div>':
+    r.phase==='REVEAL'?feedbackView(r):
     r.phase==='DRAW'?`<div class="waiting ${status.out?'student-out':'student-alive'}">${won?'🏆 คุณคือแชมป์!':status.out?'❌ คุณตกรอบแล้ว! แต่ยังร่วมเรียนรู้ต่อ':'✅ คุณยังรอด! เตรียมลุ้นด่านต่อไป'}
       <p>${r.stage===4?'กลุ่มที่ได้มงคือ กลุ่ม '+r.winnerGroup:'ดูผลสุ่มบนจอครู'}</p></div>`:
     r.phase==='EXIT'?'<div class="waiting">📝 เขียน Exit Ticket ลงใบภารกิจ: สถานการณ์ • วิธีสุ่ม • ประโยชน์</div>':
     `<div class="waiting">${r.phase==='SUMMARY'?'🧠 ช่วยกันสรุปความรู้เรื่องการทดลองสุ่ม':
       r.phase==='ROLES'?'🃏 รอเปิดตัวละครบนจอครู':'🎮 รอดูภารกิจต่อไปบนจอครู'}</div>`;
-  return `<section class="student-wrap"><div class="student-mini"><img src="${img(p.role)}" alt="${esc(p.role)}"
+  return `<section class="student-wrap"><div class="student-mini ${r.phase==='QUESTION'?'compact':''}"><img src="${img(p.role)}" alt="${esc(p.role)}"
     onerror="this.parentNode.classList.add('broken')"><span class="fallback">${FACE[p.role]}</span>
     <div><strong>${esc(p.studentName)} · ${esc(p.role)}</strong><small>กลุ่ม ${p.groupNo} · เลขที่ ${p.rollNo}</small>
       <span class="status ${status.out?'out':''}">${status.out?'💔 ตกรอบด่าน '+status.stage:'💚 ยังอยู่ในเกม'}</span></div></div>
@@ -787,20 +873,23 @@ function downloadReport(type){const r=S.report;if(!r)return;
     downloadFile('ศึกคนดวงดี_'+r.room.pin+'.txt',lines.join('\n'),'text/plain;charset=utf-8');}
   toast('ดาวน์โหลดรายงานเรียบร้อย');}
 function acceptRoom(r,force=false){const old=S.room;
-  if(old&&old.scene!==r.scene){S.answerShown=false;S.drawReady=false;}
+  if(!old||old.scene!==r.scene){S.answerShown=r.phase==='REVEAL';S.drawReady=false;}
   S.room=r;const key=S.mode+'|'+r.pin+'|'+r.scene+(r.phase==='LOBBY'?'|'+r.registered:'');
-  if(force||key!==S.viewKey){S.viewKey=key;render();}else updateLive();}
+  if(force||key!==S.viewKey){S.viewKey=key;render();}else updateLive();
+  if(S.mode==='teacherRoom')bgmLevel(!!S.fx);
+  if(S.mode==='studentRoom'&&old?.scene!==r.scene&&r.phase==='QUESTION')window.scrollTo?.(0,0);}
 async function refreshRoom(force=false){if(!S.pin)return;acceptRoom(await getRoom(S.pin),force);}
 async function enterTeacherRoom(pin){S.pin=String(pin);S.mode='teacherRoom';S.champion=null;
-  S.room=await getRoom(S.pin);S.viewKey='';render();bgm(true);
+  S.room=await getRoom(S.pin);S.answerShown=S.room.phase==='REVEAL';S.drawReady=false;
+  S.viewKey='';render();bgm(true);
   if(S.room.phase==='DRAW'&&S.room.stage===4){try{S.champion=(await post('report',{pin:S.pin},true)).champion;render();}catch(_){}}}
 async function enterStudentRoom(p,rejoin=false){if(rejoin){const data=await post('register',{pin:p.pin,
   rollNo:p.rollNo,studentName:p.studentName});p={...data.student,pin:p.pin};}
   S.pin=p.pin;S.student=p;S.mode='studentRoom';await refreshRoom(true);
   S.student.roomId=S.room.roomId;saveStudent();
   try{const status=await post('status',{pin:S.pin,rollNo:p.rollNo,studentName:p.studentName,sessionKey:p.sessionKey});
-    if(status.questionId&&status.answer!==null)storeSent(status.questionId);}catch(_){}
-  render();}
+    if(status.questionId&&status.answer!==null)storeSent(status.questionId,status.answer);}catch(_){}
+  render();window.scrollTo?.(0,0);}
 async function enterStudentByPin(pin,room){S.pin=pin;S.room=room;
   let saved;try{saved=JSON.parse(localStorage.getItem('luck_v6_student')||'null');}catch(_){saved=null;}
   if(saved?.pin===pin&&saved.roomId===room.roomId){try{await enterStudentRoom(saved,true);return;}catch(_){}}
@@ -821,12 +910,15 @@ function pauseTimer(){const k=timerKey(),s=Number(sessionStorage.getItem(k)||Dat
 async function nextTeacher(){const r=S.room,draw=r.phase==='REVEAL'&&['PRE','P2','P3','P4'].includes(r.questionId);
   if(draw&&!S.drawReady)throw Error('กรุณาเปิดฉากเตรียมสุ่มก่อน');
   if(r.phase==='DRAW')stopFx(); // ออกจากฉากตกรอบ: หยุด out.mp3 แล้วคืนเสียง BGM
-  if(r.phase==='INTRO')await openingEffect('เตรียมคิด!');
+  // เริ่มโหลดโจทย์ระหว่างตัวเลข 3–2–1 เพื่อตัดช่วงค้างหลังนับเสร็จ
+  const early=r.phase==='INTRO'?post('advance',{pin:S.pin,expectedScene:r.scene},true):null;
+  if(early)await openingEffect('เตรียมคิด!');
   if(draw)await shuffleEffect(r);
   if(draw)loading(true,'กำลังตรวจผลสุ่มจากระบบ...');
-  const changed=await post(draw?'draw':'advance',{pin:S.pin,expectedScene:r.scene},true);
+  const changed=await (early||post(draw?'draw':'advance',{pin:S.pin,expectedScene:r.scene},true));
   acceptRoom(changed,true); // ผลลัพธ์จากการกดมีข้อมูลห้องอยู่แล้ว ไม่ต้อง GET ซ้ำ
   if(r.phase==='LOBBY')await introCards(S.room);
+  if(r.phase==='RESULTS')playFx('reveal');
   if(draw){
     if(r.stage===4){post('report',{pin:S.pin},true).then(rep=>{if(S.room?.phase==='DRAW'&&S.room.stage===4){
         S.champion=rep.champion;render();}}).catch(()=>{});
@@ -854,8 +946,8 @@ async function handleAction(e){const el=e.target.closest('[data-act]');if(!el)re
   if(a==='timer-pause'){pauseTimer();return;}
   if(a==='timer-reset'){sessionStorage.setItem(timerKey(),String(Date.now()));S.timerPaused=false;updateClock();return;}
   if(a==='show-summary'){S.summaryOpen=true;render();return;}
-  if(a==='show-answer'&&S.room?.phase==='REVEAL'){
-    S.answerShown=true;S.drawReady=false;render();playFx('reveal');return;}
+  if(a==='show-answer'&&S.room?.phase==='RESULTS'){
+    guarded(nextTeacher,'กำลังเปิดเฉลย...');return;}
   if(a==='prepare-draw'&&S.room?.phase==='REVEAL'&&S.answerShown){
     S.drawReady=true;stopFx();render();return;}
   if(a==='copy-link'){navigator.clipboard.writeText(qrLink(S.pin)).then(()=>toast('คัดลอกลิงก์แล้ว'))
@@ -900,7 +992,10 @@ async function handleForm(e){const form=e.target,id=form.id;
     if(answer===null||answer==='')throw Error('กรุณาเลือกคำตอบ');
     const p=S.student,res=await post('answer',{pin:S.pin,rollNo:p.rollNo,
       studentName:p.studentName,sessionKey:p.sessionKey,questionId:q,answer});
-    if(res.accepted){storeSent(q);render();toast('✅ ส่งคำตอบแล้ว');}},'กำลังส่งคำตอบ...');
+    if(res.accepted){let recorded=answer;
+      if(res.alreadySubmitted){const status=await post('status',{pin:S.pin,rollNo:p.rollNo,
+        studentName:p.studentName,sessionKey:p.sessionKey});recorded=status.answer;}
+      storeSent(q,recorded);render();toast('✅ ส่งคำตอบแล้ว');}},'กำลังส่งคำตอบ...');
 }
 document.addEventListener('click',e=>handleAction(e));
 document.addEventListener('submit',e=>handleForm(e));
