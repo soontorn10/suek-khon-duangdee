@@ -91,7 +91,7 @@
 .projector .panel .room-card p{margin:4px auto}}
 @media print{body{background:white}.screen{background:white;color:#222;min-height:auto;padding:0}.screen:before,.screen:after,.topbar,.actions,.footer,.report-tabs,.toast,.no-print{display:none!important}.panel{color:#222;box-shadow:none;border:0;width:100%;max-width:none;padding:8px}.panel h2{color:#222}.metric,.mini-card{border:1px solid #aaa}table{min-width:0}th,td{font-size:10px;padding:5px}}
 
-/* ศึกคนดวงดี v9 — การ์ดไม่มีชื่อซ้อนภาพ / เสียงเล่นครบ */
+/* ศึกคนดวงดี v10 — ฉากเปิด/คิด/เฉลย/สุ่มคนละบุคลิก + จอครู 16:9 */
 .role-card{padding:3px;overflow:hidden;border-radius:8px;min-height:0;aspect-ratio:3/4;background:#fff!important}
 .role-card img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 5px #4e40703d)}
 .role-card .fallback{display:none;font-size:clamp(33px,5vw,60px)}
@@ -222,13 +222,101 @@
   .shuffle-token{width:75px;left:calc(50% - 38px)}.shuffle-deck{height:170px;transform:scale(.74)}
   .float-role{z-index:-1;opacity:.32}}
 
+/* ประหยัดพื้นที่โปรเจกเตอร์ และเปลี่ยนฉากเป็นจังหวะสั้น ๆ โดยไม่เพิ่มการกด */
+.scene-body{animation:scene-arrive .48s cubic-bezier(.2,.68,.25,1) both}
+@keyframes scene-arrive{from{opacity:.25;transform:translateY(18px) scale(.985)}to{opacity:1;transform:none}}
+.screen.mode-opening{background:radial-gradient(circle at 50% 25%,#b39ae8 0%,#7058b3 47%,#36265e 100%)}
+.screen.mode-roles{background:radial-gradient(circle at 50% 16%,#dbc8fd,#8c78d4 60%,#514286)}
+.screen.mode-question{background:radial-gradient(circle at 50% 8%,#ded5fb,#b2a4e6 52%,#7665bf)}
+.screen.mode-answer{background:radial-gradient(circle at 50% 10%,#bcebd4,#78c5ac 53%,#467f83)}
+.screen.mode-random,.screen.mode-result{background:radial-gradient(circle at 50% 18%,#6852a5,#322654 61%,#211637)}
+.screen.mode-summary{background:radial-gradient(circle at 50% 20%,#b5a6e8,#796dc5 66%,#574a98)}
+.projector .scene-body{flex:1;min-height:0;width:100%;display:flex;flex-direction:column;justify-content:center;align-items:stretch}
+.projector .footer{flex:none}
+.projector .mission-nav{margin:3px 0;gap:8px;flex:none}
+.projector .stage-chip{padding:5px 6px;box-shadow:none;font-size:13px;min-height:27px}
+.projector .stage-chip span{font-size:13px;font-weight:800}
+.projector .mission{max-width:1470px}
+.projector .panel{max-width:1430px;width:100%}
+.projector .mission h1{font-size:clamp(40px,5vw,75px)}
+.stage-opening{display:grid;place-items:center;gap:clamp(12px,2vh,26px)}
+.projector .stage-opening h1{font-size:clamp(67px,8.2vw,124px);letter-spacing:-.04em;text-shadow:0 9px #46347e,0 19px 25px #2419527d}
+.opening-story{background:linear-gradient(100deg,#fff5d0,#ffde9d);color:#65477b;border:3px solid white;
+  border-radius:24px;padding:clamp(17px,3vh,35px) clamp(24px,5vw,75px);font-size:clamp(25px,3.1vw,44px);font-weight:900;
+  line-height:1.35;max-width:1400px;box-shadow:0 10px 24px #291b5477;text-align:center}
+.stage-opening .rule-sub{font-size:clamp(19px,2vw,30px)}
+.game-manual{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;width:min(1240px,96%);margin:15px auto 3px}
+.game-manual span{padding:14px 10px;border-radius:16px;border:2px solid #ffeda6;background:#fff7dd;
+  color:#654984;font-size:clamp(15px,1.55vw,23px);font-weight:900;line-height:1.3;box-shadow:0 5px #48367f64}
+.study-reminder{text-align:center;color:#fff8d6;font-weight:900;font-size:clamp(15px,1.55vw,21px)!important}
+.mode-roles .role-row .role-card{width:clamp(103px,11vw,159px)}
+.question-heading h1,.answer-heading h1{font-size:clamp(36px,4.7vw,68px)!important;margin:3px 0!important}
+.math-label{display:inline-block;background:#6352a1;color:white;border-radius:45px;padding:9px 27px;
+  font-size:clamp(19px,1.9vw,27px);letter-spacing:0;box-shadow:0 5px #49367c}
+.projector .question-panel{padding:clamp(18px,2.2vh,28px) clamp(28px,4vw,64px);background:#fffdfa;border:4px solid #fff;
+  box-shadow:0 8px #6453a8,0 20px 28px #3f32783d;border-radius:30px;text-align:center}
+.projector .math-focus{font-size:clamp(29px,3.6vw,53px)!important;line-height:1.27!important;color:#4b397e;margin:16px auto}
+.projector .question-panel .answer-choices{max-width:1280px;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:8px}
+.projector .question-panel .answer-choice{font-size:clamp(16px,1.5vw,24px);padding:10px 15px}
+.question-controls{display:flex;justify-content:center;align-items:center;gap:17px;flex-wrap:wrap;margin:13px auto 5px}
+.question-controls .actions{margin:0}.question-controls .btn{min-width:240px}
+.projector .question-panel .response-progress{max-width:1200px;margin:12px auto 0}
+.worksheet-hint{font-size:14px!important}.timer-hint{font-size:12px!important;opacity:.78}
+.projector .answer-panel{background:linear-gradient(155deg,#f2fff6,#ddf6e9);border:4px solid #fffdf1;
+  border-radius:30px;padding:clamp(15px,2.5vh,30px) clamp(25px,3.7vw,65px);box-shadow:0 8px #3d9684,0 19px 34px #1f50594a}
+.answer-question{text-align:center;color:#54786d;font-size:clamp(16px,1.9vw,26px);font-weight:850;margin:0 auto 13px}
+.answer-summary{background:#fff;border:2px solid #b6e0d0;border-radius:18px;padding:12px 20px;color:#366d61;
+  width:min(1050px,100%);margin:8px auto;text-align:center}
+.answer-summary>b{font-size:clamp(19px,2vw,28px)}.answer-summary .answer-stat{text-align:left}
+.answer-highlight{background:#fff;border:4px solid #8dd8b4;border-radius:24px;box-shadow:0 8px #a0cfb9;
+  padding:clamp(14px,2.2vh,24px);text-align:center;display:grid;gap:5px;animation:answer-glow .48s ease-out both}
+.answer-highlight>span{font-size:clamp(18px,2.1vw,28px);font-weight:900;color:#2d8a66}
+.answer-highlight>strong{font-size:clamp(26px,3.5vw,55px);color:#087750;line-height:1.2;overflow-wrap:anywhere}
+.answer-highlight>strong.numeric{font-size:clamp(64px,8vw,120px);letter-spacing:-.04em}
+@keyframes answer-glow{from{opacity:0;transform:scale(.9);filter:brightness(1.4)}to{opacity:1;transform:scale(1);filter:none}}
+.answer-reason{font-size:clamp(17px,1.8vw,26px);line-height:1.32;font-weight:850;border-radius:14px;
+  background:#cbf1dd;color:#366e57;text-align:center;margin:13px auto 8px;padding:11px 15px}
+.mode-answer .teacher-discussion{background:#ffffffab;color:#3f7356}
+.ready-mission{display:grid;justify-items:center;gap:clamp(12px,2.2vh,25px)}
+.projector .ready-mission h1{font-size:clamp(64px,7.5vw,116px);color:#ffe5a3;text-shadow:0 8px #4d3672}
+.ready-rule{font-size:clamp(29px,3.9vw,59px);font-weight:950;color:#624679;background:#fff1ca;
+  border:4px solid white;border-radius:24px;padding:clamp(18px,2.4vh,35px) clamp(22px,4vw,60px);width:min(1330px,100%);
+  box-shadow:0 12px 25px #100a3066;text-align:center;line-height:1.35}
+.ready-rule em{color:#de4b78;font-style:normal;font-size:1.17em}
+.ready-explain{font-size:clamp(20px,2.2vw,33px);font-weight:900;color:#fff4c5;text-align:center;margin:2px auto}
+.ready-mission .role-row .role-card{width:clamp(111px,11vw,155px)}
+.group-number-cards{display:flex;justify-content:center;flex-wrap:wrap;gap:12px}
+.group-number-cards span{padding:12px 18px;background:#fff1ca;border:2px solid white;border-radius:15px;color:#55457a;
+  font-size:clamp(19px,1.8vw,29px);font-weight:900}
+.random-start{background:linear-gradient(120deg,#ffed8e,#f6bd59)!important;color:#574078!important;
+  font-size:clamp(23px,2.6vw,38px)!important;padding:15px 36px!important;box-shadow:0 8px #8e6b85!important}
+.mode-result .survival-board{width:min(1470px,100%);grid-template-columns:1fr 1.45fr}
+.mode-result .survival-side .role-card{width:clamp(105px,10vw,148px)}
+.countdown strong.pop-number{display:block;animation:number-pop .54s cubic-bezier(.18,.7,.24,1) both}
+@keyframes number-pop{from{opacity:.25;transform:scale(1.7)}55%{opacity:1;transform:scale(.91)}to{opacity:1;transform:scale(1)}}
+@media(min-width:900px) and (max-height:790px){
+  .projector .stage-opening h1,.projector .ready-mission h1{font-size:clamp(51px,6.2vw,92px)}
+  .projector .opening-story{font-size:clamp(23px,2.5vw,35px);padding:14px 24px}
+  .projector .math-focus{font-size:clamp(26px,2.9vw,40px)!important;margin:9px auto}
+  .projector .question-panel{padding:10px 23px}.projector .answer-panel{padding:10px 23px}
+  .projector .question-panel .answer-choice{font-size:clamp(15px,1.5vw,20px);padding:5px 10px}
+  .projector .answer-highlight{padding:9px}.answer-highlight>strong.numeric{font-size:78px}
+  .mode-roles .role-row .role-card{width:clamp(91px,9vw,125px)}
+  .game-manual span{padding:8px;font-size:16px}.study-reminder{font-size:14px!important}
+  .ready-mission .role-row .role-card{width:clamp(95px,8vw,121px)}
+  .mode-result .survival-side .role-card{width:clamp(90px,8vw,115px)}
+}
+@media(max-width:760px){.game-manual{grid-template-columns:1fr}.question-controls{flex-direction:column}
+  .question-panel .answer-choices{grid-template-columns:1fr}.answer-highlight>strong{font-size:29px}
+  .answer-highlight>strong.numeric{font-size:65px}.ready-rule{font-size:27px}}
+
 </style></head><body>
 <div id="app"></div><div id="toast" class="toast hidden" role="status"></div>
-<div id="countdown" class="countdown hidden" aria-live="assertive"><strong id="count-num">3</strong><span>สุ่มนี้...ชี้ชะตา!</span><button class="btn skip" data-act="skip-effect">⏭ ข้ามเอฟเฟกต์</button></div>
+<div id="countdown" class="countdown hidden" aria-live="assertive"><strong id="count-num">3</strong><span>สุ่มนี้...ชี้ชะตา!</span></div>
 <div id="loading" class="loading-mask hidden" role="status" aria-live="polite"><div><div class="loading-wheel"></div><span id="loading-label">กำลังเชื่อมต่อ...</span><p style="font-size:13px;opacity:.75">โปรดรอสักครู่</p></div></div>
 <audio id="bgm" loop preload="none"></audio>
 <script>
-/* ศึกคนดวงดี v9 | เมนูเรียบง่าย + เสียงเต็มเพลง + ทดสอบได้แม้ไม่มีนักเรียน | GS v8 */
+/* ศึกคนดวงดี v10 | ฉากเกมโชว์ชัดเจน คำถาม-เฉลย-สุ่ม แสดงผลตอบร่วมกับเฉลย | GS v9 */
 const API='https://script.google.com/macros/s/AKfycbwJHNmQVsdUSQzy3gH8Y6vGGaswy5EymEx09gS9ewl0gu6j8TZbo4X2nKiDTqzU6mMT/exec';
 const SHEET_URL='https://docs.google.com/spreadsheets/d/1iLKSq7UXITmYcSxI2Ap_BQ0AyNeyRi17os51j3maswI/edit';
 const BGM_FILE='audio/background.mp3';
@@ -255,10 +343,10 @@ const REASONS={
 };
 const S={mode:'landing',pin:'',room:null,student:null,pass:sessionStorage.getItem('luck_admin')||'',
   report:null,tab:'overview',viewKey:'',busy:false,
-  sound:localStorage.getItem('luck_sound')!=='off',summaryOpen:false,
+  sound:localStorage.getItem('luck_sound')!=='off',summaryOpen:false,answerShown:false,drawReady:false,
   bgmVolume:Number(localStorage.getItem('luck_bgm_volume')??100),
   sfxVolume:Number(localStorage.getItem('luck_sfx_volume')??100),soundPanel:false,
-  timerPaused:false,timerPauseAt:0,clockKey:'',champion:null,skipEffect:false,
+  timerPaused:false,timerPauseAt:0,clockKey:'',champion:null,
   fx:null,fxKind:null,fxStopTimer:null};
 const $=id=>document.getElementById(id),delay=ms=>new Promise(ok=>setTimeout(ok,ms));
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -292,7 +380,7 @@ function jsonp(p){return new Promise((resolve,reject)=>{
 async function post(action,data={},admin=false){const requestId=uid(),payload=new URLSearchParams({action,requestId,...data});
   if(admin)payload.set('adminPassword',S.pass);
   await Promise.race([fetch(API,{method:'POST',mode:'no-cors',body:payload,cache:'no-store'}).catch(()=>{}),delay(900)]);
-  for(let i=0;i<32;i++){await delay(i<6?700:1400);
+  for(let i=0;i<32;i++){await delay(i<6?450:1100);
     try{const r=await jsonp({action:'receipt',requestId});if(r.error==='WAITING')continue;
       if(!r.ok)throw Error(r.error||'SERVER_ERROR');return r.data;
     }catch(e){if(['เชื่อมต่อ Google Sheets ไม่ได้','เชื่อมต่อหมดเวลา'].includes(e.message))continue;throw e;}}
@@ -340,22 +428,20 @@ function fireworksSound(seconds=2.8){if(!S.sound||!S.mode.startsWith('teacher'))
 function burst(big=false){document.querySelector('.fanfare')?.remove();const n=document.createElement('div');n.className='fanfare';
   n.innerHTML=Array.from({length:big?50:28},(_,i)=>`<i style="--i:${i}"></i>`).join('');document.body.appendChild(n);
   setTimeout(()=>n.remove(),3200);fireworksSound(big?3:2.5);}
-async function openingEffect(label){S.skipEffect=false;const el=$('countdown');el.classList.remove('hidden');
+async function openingEffect(label){const el=$('countdown');el.classList.remove('hidden');
   el.querySelector('span').textContent=label;loading(false);
-  for(const item of ['3','2','1','GO!']){if(S.skipEffect)break;$('count-num').textContent=item;sfx('step');
-    const until=Date.now()+(item==='GO!'?340:540);while(Date.now()<until&&!S.skipEffect)await delay(40);}
+  for(const item of ['3','2','1']){const n=$('count-num');n.textContent=item;
+    n.classList.remove('pop-number');void n.offsetWidth;n.classList.add('pop-number');sfx('step');await delay(540);}
   el.classList.add('hidden');}
-async function animatedCards(list,label,ms=3900){S.skipEffect=false;loading(false);
+async function animatedCards(list,label,ms=3900){loading(false);
   const wrap=document.createElement('div');wrap.className='shuffling';
   wrap.innerHTML=`<h2>${esc(label)}</h2><div class="shuffle-deck">${list.map((k,i)=>{
     const style=`style="--i:${i};--x:${(i-(list.length-1)/2)*(list.length>6?105:135)}px;--d:${i*.10}s"`;
     return k.startsWith('กลุ่ม ')?`<div class="shuffle-token shuffle-group" ${style}>${esc(k)}</div>`:
       `<div class="shuffle-token" ${style}>${card(k,i)}</div>`;}).join('')}</div>
-    <p class="shuffle-slogan">🎲 ลุ้นไปพร้อมกัน...ใครจะได้ไปต่อ?</p>
-    <button class="btn ghost" data-act="skip-effect">⏭ ข้ามเอฟเฟกต์</button>`;
+    <p class="shuffle-slogan">🎲 ลุ้นไปพร้อมกัน...ใครจะได้ไปต่อ?</p>`;
   document.body.appendChild(wrap);playFx('shuffle',ms/1000+.1);
-  const start=Date.now();while(Date.now()-start<ms&&!S.skipEffect)await delay(55);
-  stopFx();wrap.remove();S.skipEffect=false;}
+  await delay(ms);stopFx();wrap.remove();}
 async function introCards(r){await animatedCards(names(r),'🃏 เปิดตัวผู้เข้าแข่งขัน!',3600);burst(false);}
 async function shuffleEffect(r){const list=r.stage===4?Array.from({length:r.groups},(_,i)=>'กลุ่ม '+(i+1)):remaining(r);
   await animatedCards(list,r.stage===4?'🏆 ดวงใครจะได้มง!':'🎲 สุ่มนี้...ชี้ชะตา!',4000);}
@@ -377,15 +463,12 @@ function header(){const teacher=S.mode.startsWith('teacher'),pin=S.room?.pin||S.
       ${teacher?`<button class="pill click" data-act="sound-settings">🎚️ เสียง</button>`:''}
       ${teacher?`<button class="pill click" data-act="sound">♫ ${S.sound?'เปิดเสียง':'ปิดเสียง'}</button>`:''}</div></header>`;}
 const PHASE_TITLES={ROLES:'เปิดตัวละคร',INTRO:'เปิดกติกาด่าน',QUESTION:'นักเรียนตอบคำถาม',
-  RESULTS:'ดูผลตอบและอภิปราย',REVEAL:'เฉลยคำตอบ',DRAW:'ประกาศผลการสุ่ม',SUMMARY:'สรุปความรู้',EXIT:'Exit Ticket'};
+  RESULTS:'ดูผลตอบและอภิปราย',REVEAL:'ดูผลตอบและเฉลย',DRAW:'ประกาศผลการสุ่ม',SUMMARY:'สรุปความรู้',EXIT:'Exit Ticket'};
 function stageProgress(){if(S.mode!=='teacherRoom'||!S.room||S.room.phase==='LOBBY')return '';
   const r=S.room,chips=Array.from({length:4},(_,i)=>{const stage=i+1;
     return `<span class="stage-chip ${stage===r.stage?'current':''} ${stage<r.stage?'passed':''}">
-      <span>${stage<r.stage?'✅':stage===r.stage?'🎮':'🔒'} ด่าน ${stage}</span><strong>${esc(STAGE[stage].name)}</strong></span>`;}).join('');
-  return `<nav class="mission-nav" aria-label="ความคืบหน้าเกม">${chips}</nav>
-    <div class="scene-guide"><span>📍 ขณะนี้: <b>${esc(PHASE_TITLES[r.phase]||r.phase)}</b>
-      ${r.questionId?`· ${r.questionId==='K3'?'ชวนคิดหลังเกม':r.questionId}`:''}</span>
-      <span class="scene-next">ถัดไป: ${esc(nextLabel(r))}</span></div>`;}
+      <span>${stage<r.stage?'✓':stage===r.stage?'▶':'○'} ด่าน ${stage}</span></span>`;}).join('');
+  return `<nav class="mission-nav" aria-label="ความคืบหน้าเกม">${chips}</nav>`;}
 function soundSettings(){return S.soundPanel&&S.mode.startsWith('teacher')?`<div class="sound-popover" role="dialog" aria-label="ตั้งค่าระดับเสียง">
   <strong>🎚️ ปรับเสียงห้องเรียน</strong><label>🎵 BGM <b id="bgm-percentage">${S.bgmVolume}%</b>
   <input type="range" min="0" max="100" value="${S.bgmVolume}" data-volume="bgm" aria-label="ระดับเพลงพื้นหลัง"></label>
@@ -393,7 +476,11 @@ function soundSettings(){return S.soundPanel&&S.mode.startsWith('teacher')?`<div
   <input type="range" min="0" max="100" value="${S.sfxVolume}" data-volume="sfx" aria-label="ระดับเอฟเฟกต์"></label>
   <button class="btn mint" data-act="test-sfx">▶ ทดลองเสียงเอฟเฟกต์</button>
   <button class="btn" data-act="sound-settings">✕ ปิด</button></div>`:'';}
-function frame(v){return `<main class="screen ${S.mode==='teacherRoom'?'projector':''}">${header()}${stageProgress()}${v}${soundSettings()}
+function sceneClass(){if(S.mode!=='teacherRoom'||!S.room)return '';
+  if(S.drawReady)return 'mode-random';
+  return ({INTRO:'mode-opening',ROLES:'mode-roles',QUESTION:'mode-question',RESULTS:'mode-answer',
+    REVEAL:'mode-answer',DRAW:'mode-result',SUMMARY:'mode-summary',EXIT:'mode-summary'})[S.room.phase]||'';}
+function frame(v){return `<main class="screen ${S.mode==='teacherRoom'?'projector':''} ${sceneClass()}">${header()}${stageProgress()}<div class="scene-body">${v}</div>${soundSettings()}
   <footer class="footer">✦ THINK • PLAY • RANDOM • WIN ✦</footer></main>`;}
 function render(){const map={landing:landingView,teacherLogin:loginView,teacherHome:teacherHomeView,
   teacherRoom:teacherRoomView,teacherReport:reportView,
@@ -406,7 +493,7 @@ function updateLive(){document.querySelectorAll('[data-live=registered]').forEac
     const i=Number(el.dataset.groupCount)-1;el.textContent=(S.room?.groupCounts?.[i]??0)+' / '+(S.room?.roles??0);});
   document.querySelectorAll('[data-group-submitted]').forEach(el=>{
     const i=Number(el.dataset.groupSubmitted)-1,v=S.room?.groupSubmitted?.[i],den=S.room?.groupCounts?.[i]??0;
-    if(v===undefined)return;el.textContent=v+' / '+den;
+    el.textContent=den===0?'รอผู้เล่น':(v??0)+' / '+den;
     el.closest('.response-group')?.classList.toggle('done',den>0&&v===den);});}
 function hero(small=false){return `<section class="hero" style="margin:${small?'9px':'24px'} auto 15px">
   <div class="float-role left">🐺<small>PLAYER</small></div><div class="float-role right">🎲<small>LUCKY</small></div>
@@ -449,14 +536,14 @@ function groupProgress(r){return `<div class="group-pills">${Array.from({length:
 function answerProgress(r){return `<div class="response-progress" aria-label="สถานะการส่งคำตอบแยกกลุ่ม">
   ${Array.from({length:r.groups},(_,i)=>{const den=r.groupCounts?.[i]??0,n=r.groupSubmitted?.[i],done=den>0&&n===den;
     return `<div class="response-group ${done?'done':''}"><small>กลุ่ม ${i+1}</small>
-      <strong data-group-submitted="${i+1}">${n===undefined?'–':n} / ${den}</strong>
+      <strong data-group-submitted="${i+1}">${den===0?'รอผู้เล่น':(n??0)+' / '+den}</strong>
       <div class="response-track"><i style="width:${den&&n!==undefined?100*n/den:0}%"></i></div></div>`;}).join('')}
-  </div>${!Array.isArray(r.groupSubmitted)?'<p class="muted center small">การนับรายกลุ่มจะทำงานเมื่ออัปเดต GS เป็นเวอร์ชัน 7</p>':''}`;}
+  </div>`;}
 function nextLabel(r){if(r.phase==='LOBBY')return '🃏 เปิดตัวละคร!';
-  if(r.phase==='ROLES')return '🔥 เปิดด่านที่ 1';if(r.phase==='INTRO')return '⏱ 3...2...1 เปิดโจทย์!';
-  if(r.phase==='QUESTION')return '📊 ปิดรับคำตอบ · ดูผลตอบ';
+  if(r.phase==='ROLES')return '🔥 เปิดด่านที่ 1';if(r.phase==='INTRO')return '❓ เปิดคำถามคณิตศาสตร์';
+  if(r.phase==='QUESTION')return '📊 ดูผลตอบและเฉลย';
   if(r.phase==='RESULTS')return '✨ เฉลย';
-  if(r.phase==='REVEAL')return ['PRE','P2','P3','P4'].includes(r.questionId)?'🎲 เริ่มสุ่มชี้ชะตา!':
+  if(r.phase==='REVEAL')return ['PRE','P2','P3','P4'].includes(r.questionId)?'🎲 เตรียมสุ่มการ์ด':
     r.questionId==='K1'?'🧠 คำถามถัดไป':r.questionId==='K2'?'🚀 ไปด่านที่ 2':'📚 สรุปองค์ความรู้';
   if(r.phase==='DRAW')return r.stage===1?'🧠 ตอบคำถามหลังสุ่ม':
     r.stage===4?'🧠 ชวนคิดหลังเกม':`🚀 ไปด่านที่ ${r.stage+1}`;
@@ -473,16 +560,23 @@ function teacherRoomView(){const r=S.room;if(!r)return '';
       ${groupProgress(r)}<div class="actions">
       <button class="btn primary big" data-act="next-scene">🃏 เปิดตัวละคร!</button></div></section>`;
   if(r.phase==='ROLES')return `<section class="mission"><div class="mission-tag">CHARACTER REVEAL ✨</div>
-    <h1>🃏 ใครได้เป็นอะไร?</h1><p class="lead">มาดูตัวละครประจำตัวกัน!</p>
+    <h1>🃏 เปิดตัวผู้เข้าแข่งขัน!</h1><p class="lead">แต่ละคนได้การ์ดตัวละครอะไรกันบ้าง?</p>
     ${roleCards(names(r))}
-    <div class="rule-sub">ใครได้หมาป่า? ใครได้แม่มด? ยกมือให้เพื่อนเห็นหน่อย!</div>${actionButton(r)}</section>`;
-  if(r.phase==='INTRO')return `<section class="mission"><div class="mission-tag">MISSION ${r.stage} / 4 · STAGE OPENING</div>
-    <h1>${esc(STAGE[r.stage].name)}</h1><div class="game-rule">⚡ ${esc(STAGE[r.stage].rule(r))}</div>
-    <p class="rule-sub">${esc(STAGE[r.stage].sub(r))}</p>
-    ${r.stage<4?roleCards(remaining(r)):''}${actionButton(r)}</section>`;
+    <div class="game-manual"><span>🃏 จำการ์ดของตัวเองให้ดี</span>
+      <span>🎲 สุ่มได้การ์ดใด ผู้ถือการ์ดชื่อนั้นทุกกลุ่มตกรอบ</span>
+      <span>🏆 รอดจนถึงรอบชิง มีสิทธิ์ลุ้นเป็นแชมป์</span></div>
+    <p class="study-reminder">📚 ตกรอบแล้ว ยังต้องตอบคำถามและทำใบภารกิจทุกด่าน</p>${actionButton(r)}</section>`;
+  if(r.phase==='INTRO')return `<section class="mission stage-opening"><div class="mission-tag">🔥 MISSION ${r.stage} / 4 · NEW ROUND</div>
+    <h1>${esc(STAGE[r.stage].name)}</h1>
+    <div class="opening-story">${esc(r.stage===1?'ศึกเริ่มแล้ว! การสุ่มการ์ดจะตัดสินว่าใครได้ไปต่อ!':
+      r.stage===2?'สี่ตัวละครยังรอด...แต่การสุ่มครั้งใหม่กำลังจะเปลี่ยนทุกอย่าง!':
+      r.stage===3?'เหลือแค่สองตัวละคร ใครจะได้ผ่านเข้าสู่รอบชิง?':
+      'ถึงรอบชิงแล้ว! การสุ่มหมายเลขกลุ่มจะตัดสินผู้คว้ามง!')}</div>
+    <p class="rule-sub">❓ แต่ก่อนจะสุ่มจริง ทุกคนต้องตอบคำถามคณิตศาสตร์ให้ได้!</p>
+    ${actionButton(r)}</section>`;
   if(r.phase==='QUESTION')return questionTeacherView(r);
   if(r.phase==='RESULTS')return resultsTeacherView(r);
-  if(r.phase==='REVEAL')return revealTeacherView(r);
+  if(r.phase==='REVEAL')return S.drawReady?drawReadyView(r):revealTeacherView(r);
   if(r.phase==='DRAW')return drawTeacherView(r);
   if(r.phase==='SUMMARY')return `<section class="mission"><div class="mission-tag">KNOWLEDGE UNLOCKED 🧠</div>
     <h1>🎲 สุ่มแล้วรู้อะไร?</h1></section><section class="panel wide center">
@@ -499,22 +593,23 @@ function teacherRoomView(){const r=S.room;if(!r)return '';
       <div class="actions"><button class="btn mint" data-act="reports">📊 รายงานผลชั้นเรียน</button></div></section>`;}
 function qBadge(r){return r.questionId==='K3'?'🧠 ชวนคิดหลังเกม':`ภารกิจ ${r.stage} · MATH MISSION`;}
 function questionTeacherView(r){const q=r.question||{},isP4=r.questionId==='P4';
-  return `<section class="mission"><div class="mission-tag">${qBadge(r)}</div>
-    <h1 style="font-size:clamp(34px,4vw,55px)">${esc(STAGE[r.stage].name)}</h1></section>
-    <section class="panel wide question-panel"><div class="question-label">โจทย์คณิตศาสตร์</div>
+  return `<section class="mission question-heading"><div class="mission-tag">${qBadge(r)}</div>
+    <h1>❓ ถึงเวลาคิด!</h1></section>
+    <section class="panel wide question-panel"><div class="question-label math-label">❓ คำถามคณิตศาสตร์</div>
       <div class="question-title math-focus">${esc(q.text||'')}</div>
       ${isP4?`<div class="answer-choices">${q.scenarios.map(t=>`<div class="answer-choice">${esc(t)}</div>`).join('')}</div>`:
         q.options?`<div class="answer-choices">${q.options.map(t=>`<div class="answer-choice">${esc(t)}</div>`).join('')}</div>`:''}
       ${['P2','P3'].includes(r.questionId)?`<div class="hud"><span class="timer" id="timer">03:00</span>
         <button class="btn" data-act="timer-pause" id="pause-btn">⏸ พักเวลา</button>
         <button class="btn" data-act="timer-reset">↻ เริ่ม 3 นาทีใหม่</button></div>`:''}
-      <div class="status-strip"><span class="live-progress">📨 ส่งคำตอบ <strong data-live="submitted">${r.submitted}</strong> / ${r.registered} คน</span></div>
-      ${answerProgress(r)}
-      <p class="muted center">${r.questionId==='P2'?'เขียนชื่อการ์ดที่เหลือ แผนภาพ และผลลัพธ์ทั้งหมดในใบภารกิจ':
+      <div class="worksheet-cue">📄 ${r.questionId==='K3'?'ชวนคิดหลังเกม':`ใบภารกิจด่าน ${r.stage}`}${['K1','K2'].includes(r.questionId)?` · ข้อ ${r.questionId==='K1'?1:2}`:''}</div>
+      <p class="muted center worksheet-hint">${r.questionId==='P2'?'เขียนชื่อการ์ดที่เหลือ แผนภาพ และผลลัพธ์ทั้งหมดในใบภารกิจ':
         r.questionId==='P3'?'เขียนผลลัพธ์ทั้งหมดลงใบภารกิจ':
         r.questionId==='P4'?'เลือกทั้ง 3 สถานการณ์ในใบภารกิจและมือถือ':'เลือกคำตอบในใบภารกิจและมือถือ'}</p>
-      <div class="worksheet-cue">📄 ใบภารกิจ: ${r.questionId==='K3'?'ชวนคิดหลังเกม':`ด่านที่ ${r.stage}`}${['K1','K2'].includes(r.questionId)?` · ข้อ ${r.questionId==='K1'?1:2}`:''}</div>
-      ${actionButton(r)}<p class="muted center">ครูควบคุมเวลาเอง · หมดเวลาแล้วไม่ปิดรับอัตโนมัติ</p></section>`;}
+      <div class="question-controls"><span class="live-progress">📨 ส่งคำตอบ <strong data-live="submitted">${r.submitted}</strong> / ${r.registered} คน</span>
+        ${actionButton(r)}</div>
+      ${r.registered?answerProgress(r):''}
+      <p class="muted center timer-hint">ครูควบคุมเวลาเอง · หมดเวลาแล้วไม่ปิดรับอัตโนมัติ</p></section>`;}
 function statBars(distribution,total){return Object.entries(distribution||{}).sort((a,b)=>b[1]-a[1]).map(([v,n])=>
   `<div class="answer-stat"><span class="label">${esc(v)}</span><span class="bar"><span class="fill" style="display:block;width:${total?n/total*100:0}%"></span></span>
     <span class="count">${n}</span></div>`).join('')||'<p class="muted">ยังไม่มีคำตอบ</p>';}
@@ -530,33 +625,54 @@ function resultsTeacherView(r){const st=r.questionStats||{submitted:0,distributi
       'ยังมีคนไม่ได้ส่งคำตอบ ชวนเพื่อนอธิบายแนวคิดสั้น ๆ ก่อนเฉลย'}</div>${actionButton(r)}
     </section>`;}
 function revealTeacherView(r){const q=r.question||{},a=r.reveal?.answer,opts=q.options||[],id=r.questionId;
-  return `<section class="mission"><div class="mission-tag">✨ MATH ANSWER REVEAL</div>
-    <h1>เฉลยภารกิจ!</h1></section><section class="panel wide">
-      <div class="question-title" style="font-size:clamp(21px,2.5vw,34px)">${esc(q.text||'')}</div>
-      ${id==='P4'?`<div class="answer-choices">${a.map((v,i)=>`<div class="answer-choice correct"><b>${'กขค'[i]}.</b> ${esc(v)} <span class="mark">✓</span></div>`).join('')}</div>`:
-      opts.length?`<div class="answer-choices">${opts.map((x,i)=>{
-        const val=id==='PRE'?x:['ก','ข','ค'][i];return `<div class="answer-choice ${val===a?'correct':''}">${esc(x)}
-          ${val===a?'<span class="mark">✓</span>':''}</div>`;}).join('')}</div>`:
-        `<div class="result-number center" style="font-size:clamp(43px,6vw,77px);color:#7460a8;text-shadow:none">${esc(a)} แบบ</div>`}
-      ${r.reveal?.outcomes?`<div class="answer-pair">${r.reveal.outcomes.map(x=>
-        `<span>${x.map(esc).join(' + ')}</span>`).join('')}</div>`:''}
-      <div class="discussion-guide">💡 ${esc(REASONS[id]||'')}</div>
-      <div class="teacher-discussion">🎤 ${r.questionStats?.correct!==undefined?
-        (Array.isArray(r.questionStats.correct)?r.questionStats.correct.every(n=>n===r.registered):r.questionStats.correct===r.registered)?
-        'ถ้าทุกคนตอบถูก: “เรารู้ได้อย่างไรว่าคำตอบนี้ถูกต้อง?”':
-        'ถ้ามีคนตอบต่าง: “อะไรทำให้บางคนเลือกคำตอบนี้?” แล้วสรุปเหตุผลร่วมกัน':
-        'ชวนนักเรียนตรวจคำตอบเทียบกับวิธีคิดในใบภารกิจ'}</div>
-      ${actionButton(r)}
-      <p class="center muted">นักเรียนตรวจคำตอบและวิธีทำในใบภารกิจ</p></section>`;}
+  const stats=r.questionStats||{submitted:0,distribution:{}},p4=id==='P4';
+  const summary=p4?`<div class="question-grid">${(stats.distribution||[]).map((d,i)=>
+    `<div class="qbox"><h3>สถานการณ์ ${'กขค'[i]}</h3>${statBars(d,stats.submitted)}</div>`).join('')}</div>`:
+    statBars(stats.distribution,stats.submitted);
+  const answerText=p4?'ก. เป็น · ข. ไม่เป็น · ค. ไม่เป็น':
+    id==='PRE'?a:opts.length?opts[['ก','ข','ค'].indexOf(a)]||String(a):a+' แบบ';
+  const outcomeList=r.reveal?.outcomes?`<div class="answer-pair">${r.reveal.outcomes.map(x=>
+    `<span>${x.map(esc).join(' + ')}</span>`).join('')}</div>`:'';
+  const correct=r.questionStats?.correct,allRight=Array.isArray(correct)?correct.every(n=>n===r.registered):correct===r.registered;
+  return `<section class="mission answer-heading"><div class="mission-tag">✅ MATH ANSWER · ด่าน ${r.stage}</div>
+    <h1>${S.answerShown?'เฉลยคำตอบที่ถูกต้อง!':'มาดูคำตอบกัน!'}</h1></section>
+    <section class="panel wide answer-panel">
+      <div class="answer-question">${esc(q.text||'')}</div>
+      ${!S.answerShown?`<div class="answer-summary"><b>📊 ผลตอบจากนักเรียน ${stats.submitted} / ${r.registered} คน</b>
+        ${summary}</div><div class="teacher-discussion">💬 ชวนคิดว่าแต่ละคนเลือกคำตอบนี้เพราะอะไร</div>
+        <div class="actions"><button class="btn primary big" data-act="show-answer">✅ เปิดเฉลยคำตอบ!</button></div>`:
+        `<div class="answer-highlight"><span>✅ เฉลยคำตอบที่ถูกต้อง</span>
+          <strong class="${id==='P2'||id==='P3'?'numeric':''}">${esc(answerText)}</strong></div>
+         ${outcomeList}<div class="answer-reason">💡 ${esc(REASONS[id]||'')}</div>
+         <div class="teacher-discussion">🎤 ${r.registered===0?'ชวนนักเรียนอธิบายเหตุผลจากใบภารกิจ':
+           allRight?'ถ้าทุกคนตอบถูก: “เรารู้ได้อย่างไรว่าคำตอบนี้ถูกต้อง?”':
+           'ถ้าคำตอบแตกต่างกัน: “อะไรทำให้บางคนคิดต่าง?” แล้วสรุปร่วมกัน'}</div>
+         <p class="center muted">นักเรียนตรวจคำตอบและวิธีทำในใบภารกิจ</p>
+         ${['PRE','P2','P3','P4'].includes(id)?
+           `<div class="actions"><button class="btn primary big" data-act="prepare-draw">🎲 ไปฉากสุ่มการ์ด</button></div>`:
+           actionButton(r)}`}
+    </section>`;}
+function drawReadyView(r){const isFinal=r.stage===4,count=r.stage===1?(r.students===30?2:1):r.stage===2?2:1;
+  const total=isFinal?r.groups:remaining(r).length;
+  return `<section class="mission ready-mission"><div class="mission-tag">🎲 RANDOM MODE · MISSION ${r.stage}</div>
+    <h1>⚡ ถึงเวลาชี้ชะตา!</h1>
+    <div class="ready-rule">${isFinal?`สุ่มหมายเลขกลุ่ม <em>1 กลุ่ม</em> จาก ${total} กลุ่ม`:
+      `สุ่มการ์ดออก <em>${count} ใบ</em> จาก ${total} ใบ`}</div>
+    <p class="ready-explain">${isFinal?'กลุ่มที่ถูกสุ่มจะคว้ามงและเป็นผู้ชนะของห้อง!':
+      'ผู้ถือการ์ดที่ถูกสุ่มออก จะตกรอบพร้อมกันทุกกลุ่ม!'}</p>
+    ${isFinal?`<div class="group-number-cards">${Array.from({length:r.groups},(_,i)=>`<span>กลุ่ม ${i+1}</span>`).join('')}</div>`:
+      roleCards(remaining(r))}
+    <div class="actions"><button class="btn primary big random-start" data-act="next-scene">🎲 เริ่มสุ่ม${isFinal?'กลุ่ม':'การ์ด'}!</button></div>
+  </section>`;}
 function drawTeacherView(r){const d=(r.draws||[]).find(x=>x.stage===r.stage),survivors=remaining(r);
   if(r.stage===4)return `<div class="champion-burst" aria-hidden="true">${Array.from({length:25},(_,i)=>
     `<i style="--i:${i}"></i>`).join('')}</div><section class="mission"><div class="mission-tag">THE FINAL WINNER 🏆</div>
     <h1>👑 ดวงใครจะได้มง!</h1><div class="result-number">กลุ่ม ${r.winnerGroup}</div>
-    <div class="winner">${esc(S.champion?.studentName||'แชมป์ของห้องเรียน!')}</div>
+    <div class="winner">${esc(S.champion?.studentName||'กลุ่มผู้ชนะ!')}</div>
     <p class="lead">${esc(S.champion?.role||survivors[0]||'')} · ผู้รอดชีวิตคนสุดท้าย</p>
     ${actionButton(r)}</section>`;
   return `<section class="mission result-scene"><div class="mission-tag">MISSION ${r.stage} · ผลการสุ่มการ์ด</div>
-    <h1>🎴 ${esc(STAGE[r.stage].name)}</h1></section>
+    <h1>🎴 ประกาศผลผู้รอดชีวิต!</h1></section>
     <div class="survival-board"><section class="survival-side eliminated"><h2>❌ ตกรอบ!</h2>
       <p>สุ่มได้การ์ด ${d?.eliminatedRoles?.length||0} ใบ</p>${roleCards(d?.eliminatedRoles||[])}
       <strong>${(d?.eliminatedRoles||[]).map(esc).join(' · ')}</strong></section>
@@ -670,10 +786,11 @@ function downloadReport(type){const r=S.report;if(!r)return;
       `${p.rollNo} | ${p.studentName} | ${p.groupNo} | ${p.K.score}/3 (${pass(p.K.passed)}) | ${p.P.score??'–'}/3 (${pass(p.P.passed)}) | ${p.A.score??'–'}/3 (${pass(p.A.passed)})`)];
     downloadFile('ศึกคนดวงดี_'+r.room.pin+'.txt',lines.join('\n'),'text/plain;charset=utf-8');}
   toast('ดาวน์โหลดรายงานเรียบร้อย');}
-async function refreshRoom(force=false){if(!S.pin)return;const r=await getRoom(S.pin),old=S.room;
+function acceptRoom(r,force=false){const old=S.room;
+  if(old&&old.scene!==r.scene){S.answerShown=false;S.drawReady=false;}
   S.room=r;const key=S.mode+'|'+r.pin+'|'+r.scene+(r.phase==='LOBBY'?'|'+r.registered:'');
-  if(force||key!==S.viewKey){S.viewKey=key;render();}else updateLive();
-  if(old?.scene!==r.scene&&r.phase==='REVEAL'&&S.mode==='teacherRoom')playFx('reveal');}
+  if(force||key!==S.viewKey){S.viewKey=key;render();}else updateLive();}
+async function refreshRoom(force=false){if(!S.pin)return;acceptRoom(await getRoom(S.pin),force);}
 async function enterTeacherRoom(pin){S.pin=String(pin);S.mode='teacherRoom';S.champion=null;
   S.room=await getRoom(S.pin);S.viewKey='';render();bgm(true);
   if(S.room.phase==='DRAW'&&S.room.stage===4){try{S.champion=(await post('report',{pin:S.pin},true)).champion;render();}catch(_){}}}
@@ -702,15 +819,17 @@ function pauseTimer(){const k=timerKey(),s=Number(sessionStorage.getItem(k)||Dat
   if(S.timerPaused){sessionStorage.setItem(k,String(s+Date.now()-S.timerPauseAt));S.timerPaused=false;}
   else{S.timerPaused=true;S.timerPauseAt=Date.now();}updateClock();}
 async function nextTeacher(){const r=S.room,draw=r.phase==='REVEAL'&&['PRE','P2','P3','P4'].includes(r.questionId);
+  if(draw&&!S.drawReady)throw Error('กรุณาเปิดฉากเตรียมสุ่มก่อน');
   if(r.phase==='DRAW')stopFx(); // ออกจากฉากตกรอบ: หยุด out.mp3 แล้วคืนเสียง BGM
-  if(r.phase==='INTRO')await openingEffect('เปิดโจทย์!');
+  if(r.phase==='INTRO')await openingEffect('เตรียมคิด!');
   if(draw)await shuffleEffect(r);
   if(draw)loading(true,'กำลังตรวจผลสุ่มจากระบบ...');
   const changed=await post(draw?'draw':'advance',{pin:S.pin,expectedScene:r.scene},true);
-  await refreshRoom(true);
+  acceptRoom(changed,true); // ผลลัพธ์จากการกดมีข้อมูลห้องอยู่แล้ว ไม่ต้อง GET ซ้ำ
   if(r.phase==='LOBBY')await introCards(S.room);
   if(draw){
-    if(r.stage===4){try{S.champion=(await post('report',{pin:S.pin},true)).champion;render();}catch(_){}
+    if(r.stage===4){post('report',{pin:S.pin},true).then(rep=>{if(S.room?.phase==='DRAW'&&S.room.stage===4){
+        S.champion=rep.champion;render();}}).catch(()=>{});
       playFx('reveal',0,()=>{if(S.room?.phase==='DRAW'&&S.room.stage===4)burst(true);});}
     else playFx('reveal',0,()=>{if(S.room?.phase==='DRAW'&&S.room.stage===r.stage)playFx('out');});}
   if(r.phase==='SUMMARY')S.summaryOpen=false;
@@ -718,7 +837,7 @@ async function nextTeacher(){const r=S.room,draw=r.phase==='REVEAL'&&['PRE','P2'
 function numbersFor(roll,keys){const obj={};keys.forEach(k=>{const el=document.querySelector(`[data-roll="${roll}"][data-score="${k}"]`);
   if(!el||el.value==='')throw Error('กรุณาเลือกคะแนนให้ครบทุกช่อง');obj[k]=el.value;});return obj;}
 async function handleAction(e){const el=e.target.closest('[data-act]');if(!el)return;const a=el.dataset.act;
-  if(a==='skip-effect'){S.skipEffect=true;return;}if(S.busy)return;
+  if(S.busy)return;
   if(a==='sound'){S.sound=!S.sound;localStorage.setItem('luck_sound',S.sound?'on':'off');
     if(S.sound){bgm(true);sfx('step');}else{stopFx();bgm(false);}render();return;}
   if(a==='sound-settings'){S.soundPanel=!S.soundPanel;render();return;}
@@ -735,6 +854,10 @@ async function handleAction(e){const el=e.target.closest('[data-act]');if(!el)re
   if(a==='timer-pause'){pauseTimer();return;}
   if(a==='timer-reset'){sessionStorage.setItem(timerKey(),String(Date.now()));S.timerPaused=false;updateClock();return;}
   if(a==='show-summary'){S.summaryOpen=true;render();return;}
+  if(a==='show-answer'&&S.room?.phase==='REVEAL'){
+    S.answerShown=true;S.drawReady=false;render();playFx('reveal');return;}
+  if(a==='prepare-draw'&&S.room?.phase==='REVEAL'&&S.answerShown){
+    S.drawReady=true;stopFx();render();return;}
   if(a==='copy-link'){navigator.clipboard.writeText(qrLink(S.pin)).then(()=>toast('คัดลอกลิงก์แล้ว'))
     .catch(()=>toast('คัดลอกไม่สำเร็จ',true));return;}
   if(a==='back-to-game'){stopFx();guarded(()=>enterTeacherRoom(S.pin),'กำลังกลับเข้าเกม...');return;}
